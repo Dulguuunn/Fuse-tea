@@ -63,7 +63,7 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
 - [x] Task 5: Rich-text editor
 - [x] Task 6: Images in notes
 - [x] Task 7: To-dos page
-- [ ] Task 8: Calendar week view
+- [x] Task 8: Calendar week view
 - [ ] Task 9: Calendar editing — dialogs and drag
 - [ ] Task 10: Settings page
 - [ ] Task 11: Daily backups

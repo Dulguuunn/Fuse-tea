@@ -23,6 +23,7 @@ win.on('console', (msg) => {
 })
 win.on('pageerror', (err) => console.log(`[renderer exception] ${err.message}`))
 await win.waitForLoadState('domcontentloaded')
+await win.locator('.app').waitFor()
 await win.setViewportSize({ width: 1280, height: 800 })
 if (theme) await win.evaluate((t) => document.documentElement.setAttribute('data-theme', t), theme)
 if (page) await win.getByRole('button', { name: page, exact: true }).first().click()

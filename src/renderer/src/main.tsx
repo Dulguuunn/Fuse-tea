@@ -6,6 +6,7 @@ import './styles/tokens.css'
 import './styles/base.css'
 import './styles/sidebar.css'
 import App from './App'
+import { useCalendar } from './state/calendarStore'
 import { saver } from './state/saver'
 import { useNotes } from './state/notesStore'
 import { useSettings } from './state/settingsStore'
@@ -19,7 +20,8 @@ async function loadAll(): Promise<void> {
   const loaders: Array<[string, () => Promise<void>]> = [
     ['settings', () => useSettings.getState().load()],
     ['notes', () => useNotes.getState().load()],
-    ['tasks', () => useTasks.getState().load()]
+    ['tasks', () => useTasks.getState().load()],
+    ['calendar', () => useCalendar.getState().load()]
   ]
   await Promise.all(
     loaders.map(([name, load]) => load().catch((e: unknown) => console.error(`Could not load ${name}`, e)))

@@ -83,4 +83,4 @@ export const DEFAULT_SETTINGS: Settings = {
   timeFormat: '24h'
 }
 
-export const DEFAULT_COLOR = '#4f6bed'
+export const DEFAULT_COLOR = '#7cc4ff'

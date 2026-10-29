@@ -1,0 +1,280 @@
+.calendar-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.calendar-header {
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+.calendar-header .page-title {
+  min-width: 270px;
+}
+.week-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.calendar-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+/* ---------- Grid frame ---------- */
+
+.week {
+  --gutter: 58px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0 24px 20px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  background: var(--paper-raised);
+  overflow: hidden;
+}
+
+.week-row {
+  display: grid;
+  grid-template-columns: var(--gutter) repeat(7, minmax(0, 1fr));
+}
+
+.week-gutter {
+  border-right: 1px solid var(--rule);
+}
+
+/* ---------- Day headers ---------- */
+
+.week-head {
+  border-bottom: 1px solid var(--rule);
+}
+.day-head {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 9px 10px 8px;
+  border-left: 1px solid var(--grid-line);
+}
+.day-head:nth-child(2) {
+  border-left: none;
+}
+.day-name {
+  font-size: var(--text-xs);
+  color: var(--graphite);
+}
+.day-num {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--ink-soft);
+  padding: 0 3px;
+}
+/* Today's date gets a highlighter swipe. */
+.day-head[data-today] .day-name {
+  color: var(--ink);
+  font-weight: 600;
+}
+.day-head[data-today] .day-num {
+  color: var(--block-ink);
+  background: linear-gradient(transparent 38%, #ffd84d 38%, #ffd84d 90%, transparent 90%);
+}
+
+/* ---------- Due tasks strip ---------- */
+
+.week-due {
+  border-bottom: 1px solid var(--rule);
+  min-height: 34px;
+}
+.week-due-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 9px;
+  font-size: 11px;
+  color: var(--graphite);
+}
+.due-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding: 5px;
+  border-left: 1px solid var(--grid-line);
+}
+.due-cell:nth-child(2) {
+  border-left: none;
+}
+
+.task-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 22px;
+  padding: 0 7px;
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--text-xs);
+  text-align: left;
+  cursor: pointer;
+}
+.task-chip:hover {
+  border-color: var(--rule-strong);
+  background: var(--paper-hover);
+}
+.task-chip-box {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 50%;
+}
+.task-chip-label {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.task-chip[data-done] {
+  color: var(--graphite);
+}
+.task-chip[data-done] .task-chip-label {
+  text-decoration: line-through;
+}
+.task-chip[data-done] .task-chip-box {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.task-chip-more {
+  align-self: flex-start;
+  padding: 0 4px;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+/* ---------- Hours ---------- */
+
+.week-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.week-body {
+  position: relative;
+}
+.hour-labels {
+  position: relative;
+}
+.hour-labels span {
+  position: absolute;
+  right: 9px;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--graphite);
+  font-variant-numeric: tabular-nums;
+}
+
+.day-col {
+  position: relative;
+  border-left: 1px solid var(--grid-line);
+  background-image: linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 100% var(--hour);
+}
+.day-col:nth-child(2) {
+  border-left: none;
+}
+.day-col[data-today] {
+  background-color: color-mix(in srgb, var(--accent) 4%, transparent);
+}
+
+/* ---------- Blocks ---------- */
+
+.cal-block {
+  position: absolute;
+  overflow: hidden;
+  padding: 4px 7px 4px 8px;
+  border-radius: 6px;
+  border-left: 3px solid color-mix(in srgb, var(--block) 55%, #1f2a44);
+  background: var(--block);
+  color: var(--block-ink);
+  font-size: var(--text-xs);
+  line-height: 1.3;
+  box-shadow: 0 0 0 1.5px var(--paper-raised);
+}
+/* One-off events (exams, deadlines) are hatched so they read differently from weekly classes. */
+.cal-block[data-kind='event'] {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.32) 0 5px,
+    transparent 5px 10px
+  );
+}
+.cal-block-title {
+  font-weight: 650;
+  font-size: 12.5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.cal-block-time,
+.cal-block-sub {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.78;
+  font-variant-numeric: tabular-nums;
+}
+.cal-block[data-size='sm'] .cal-block-sub {
+  display: none;
+}
+.cal-block[data-size='xs'] {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.cal-block[data-size='xs'] .cal-block-title {
+  font-size: 11px;
+}
+.cal-block[data-size='xs'] .cal-block-time {
+  font-size: 10.5px;
+}
+.cal-block[data-size='xs'] .cal-block-sub {
+  display: none;
+}
+
+:root[data-theme='dark'] .cal-block {
+  filter: brightness(0.9) saturate(0.92);
+}
+
+.now-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--now-line);
+  pointer-events: none;
+  z-index: 2;
+}
+.now-line::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--now-line);
+}
