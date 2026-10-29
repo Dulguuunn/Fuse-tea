@@ -7,11 +7,20 @@ interface DialogProps {
   children: ReactNode
   footer?: ReactNode
   width?: number
+  /** Close when clicking the dimmed area outside. Turn off while there are unsaved changes. */
+  closeOnBackdrop?: boolean
 }
 
 /** Modal dialog built on <dialog>: focus stays inside, Esc and clicking outside close it.
  *  Render it conditionally ({open && <Dialog …/>}); it opens when mounted. */
-export function Dialog({ title, onClose, children, footer, width = 440 }: DialogProps): React.JSX.Element {
+export function Dialog({
+  title,
+  onClose,
+  children,
+  footer,
+  width = 440,
+  closeOnBackdrop = true
+}: DialogProps): React.JSX.Element {
   const ref = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
@@ -35,7 +44,7 @@ export function Dialog({ title, onClose, children, footer, width = 440 }: Dialog
       }}
       onMouseDown={(e) => {
         e.stopPropagation()
-        if (e.target === ref.current) onClose()
+        if (closeOnBackdrop && e.target === ref.current) onClose()
       }}
     >
       <div className="dialog-inner">

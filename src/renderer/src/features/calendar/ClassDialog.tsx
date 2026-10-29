@@ -44,6 +44,10 @@ export function ClassDialog({ initial, isNew, weekStartsOn, onClose }: ClassDial
   )
   const [tried, setTried] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const rowsKey = (list: Row[]): string => list.map((r) => `${r.id}|${r.weekday}|${r.start}|${r.end}`).join(',')
+  const [initialRowsKey] = useState(() => rowsKey(rows))
+  const dirty =
+    name !== initial.name || room !== initial.room || color !== initial.color || rowsKey(rows) !== initialRowsKey
 
   const parsed = rows.map((r) => ({ ...r, s: readTime(r.start, r.origStart), e: readTime(r.end, r.origEnd) }))
   const errors = parsed.map((r) => validateSlot(r.s, r.e))
@@ -77,6 +81,7 @@ export function ClassDialog({ initial, isNew, weekStartsOn, onClose }: ClassDial
       title={isNew ? 'New class' : 'Edit class'}
       onClose={onClose}
       width={548}
+      closeOnBackdrop={!dirty}
       footer={
         <>
           {!isNew && (

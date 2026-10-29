@@ -57,6 +57,27 @@ test('a deleted to-do can be brought back with Undo', async () => {
   await app.close()
 })
 
+test('a class editor with unsaved typing stays open when you click outside it', async () => {
+  const { app, win } = await launch(freshDataDir())
+  await win.getByRole('button', { name: 'Calendar', exact: true }).click()
+  await win.getByRole('button', { name: 'New class' }).click()
+  await win.getByPlaceholder('e.g. Physics').fill('Biology')
+  await win.mouse.click(8, 790) // the dimmed area outside the dialog
+  await expect(win.getByRole('dialog', { name: 'New class' })).toBeVisible()
+  await expect(win.getByPlaceholder('e.g. Physics')).toHaveValue('Biology')
+  await app.close()
+})
+
+test('an untouched editor still closes when you click outside it', async () => {
+  const { app, win } = await launch(freshDataDir())
+  await win.getByRole('button', { name: 'Calendar', exact: true }).click()
+  await win.getByRole('button', { name: 'New event' }).click()
+  await expect(win.getByRole('dialog', { name: 'New event' })).toBeVisible()
+  await win.mouse.click(8, 790)
+  await expect(win.getByRole('dialog', { name: 'New event' })).toHaveCount(0)
+  await app.close()
+})
+
 test('pressing Escape on "Delete class?" keeps the class dialog and its unsaved edits open', async () => {
   const { app, win } = await launch(freshDataDir())
   await win.getByRole('button', { name: 'Calendar', exact: true }).click()

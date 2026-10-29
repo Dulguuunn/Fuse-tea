@@ -28,6 +28,13 @@ export function EventDialog({ initial, isNew, onClose }: EventDialogProps): Reac
 
   const s = readTime(start, start === toTimeInput(initial.start) ? initial.start : undefined)
   const e = readTime(end, end === toTimeInput(initial.end) ? initial.end : undefined)
+  const dirty =
+    title !== initial.title ||
+    date !== initial.date ||
+    start !== toTimeInput(initial.start) ||
+    end !== toTimeInput(initial.end) ||
+    location !== initial.location ||
+    color !== initial.color
   const timeError = validateSlot(s, e)
   const titleError = title.trim() ? null : 'Give the event a title.'
   const dateError = date ? null : 'Pick a date.'
@@ -44,6 +51,7 @@ export function EventDialog({ initial, isNew, onClose }: EventDialogProps): Reac
       title={isNew ? 'New event' : 'Edit event'}
       onClose={onClose}
       width={480}
+      closeOnBackdrop={!dirty}
       footer={
         <>
           {!isNew && (
