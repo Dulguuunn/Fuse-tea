@@ -56,7 +56,7 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
 ## Progress
 
 - [x] Task 1: Project scaffold
-- [ ] Task 2: Shared types, time utils, normalization, storage, IPC
+- [x] Task 2: Shared types, time utils, normalization, storage, IPC
 - [ ] Task 3: App shell, theme, saver, settings store
 - [ ] Task 4: Notes — notebooks, list, search, pin, trash
 - [ ] Task 5: Rich-text editor

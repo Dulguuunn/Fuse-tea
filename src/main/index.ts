@@ -1,7 +1,34 @@
 import { join } from 'node:path'
-import { app, BrowserWindow, Menu, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, shell } from 'electron'
+import { IPC } from '@shared/ipc'
+import { resolveDataDir } from './dataDir'
+import { registerIpc } from './ipc'
+import { Storage } from './storage'
+
+const CLOSE_FLUSH_TIMEOUT_MS = 3000
 
 let mainWindow: BrowserWindow | null = null
+
+/** Before the window closes, let the UI finish saving (max 3 s), then really close. */
+function flushBeforeClose(win: BrowserWindow): void {
+  let closing = false
+  win.on('close', (event) => {
+    if (closing) return
+    event.preventDefault()
+    closing = true
+    const finish = (): void => {
+      clearTimeout(timer)
+      ipcMain.removeListener(IPC.readyToClose, onReady)
+      if (!win.isDestroyed()) win.destroy()
+    }
+    const onReady = (e: Electron.IpcMainEvent): void => {
+      if (e.sender === win.webContents) finish()
+    }
+    const timer = setTimeout(finish, CLOSE_FLUSH_TIMEOUT_MS)
+    ipcMain.on(IPC.readyToClose, onReady)
+    win.webContents.send(IPC.beforeClose)
+  })
+}
 
 function createWindow(): BrowserWindow {
   const win = new BrowserWindow({
@@ -58,8 +85,16 @@ if (!app.requestSingleInstanceLock()) {
   })
 
   void app.whenReady().then(() => {
+    const dataDir = resolveDataDir({
+      env: process.env,
+      isPackaged: app.isPackaged,
+      execPath: process.execPath,
+      appPath: app.getAppPath()
+    })
+    registerIpc(new Storage(dataDir))
     Menu.setApplicationMenu(null)
     mainWindow = createWindow()
+    flushBeforeClose(mainWindow)
     mainWindow.on('closed', () => (mainWindow = null))
   })
 
