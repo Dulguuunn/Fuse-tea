@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { newId } from '@shared/id'
-import { toggleTask } from '@shared/tasks'
+import { insertTaskAt, removeTask, toggleTask } from '@shared/tasks'
 import type { Task } from '@shared/types'
 import { saver } from './saver'
 
@@ -13,7 +13,10 @@ interface TasksState {
   add(title: string, dueDate?: string | null, dueTime?: number | null): void
   update(id: string, patch: TaskPatch): void
   toggle(id: string): void
-  remove(id: string): void
+  /** Deletes a task; returns what's needed to undo it. */
+  remove(id: string): { task: Task; index: number } | null
+  /** Undo for remove(): puts the task back where it was. */
+  restore(task: Task, index: number): void
 }
 
 export const useTasks = create<TasksState>((set, get) => {
@@ -56,7 +59,13 @@ export const useTasks = create<TasksState>((set, get) => {
       change(id, (t) => toggleTask(t, Date.now()))
     },
     remove(id) {
-      commit(get().tasks.filter((t) => t.id !== id))
+      const { tasks, removed, index } = removeTask(get().tasks, id)
+      if (!removed) return null
+      commit(tasks)
+      return { task: removed, index }
+    },
+    restore(task, index) {
+      commit(insertTaskAt(get().tasks, task, index))
     }
   }
 })

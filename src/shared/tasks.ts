@@ -41,6 +41,20 @@ export function tasksOnDate(tasks: Task[], date: string): Task[] {
   return tasks.filter((t) => t.dueDate === date).sort(byDue)
 }
 
+/** Takes a task out of the list, remembering where it was so it can be put back (undo). */
+export function removeTask(tasks: Task[], id: string): { tasks: Task[]; removed: Task | null; index: number } {
+  const index = tasks.findIndex((t) => t.id === id)
+  if (index === -1) return { tasks, removed: null, index: -1 }
+  return { tasks: [...tasks.slice(0, index), ...tasks.slice(index + 1)], removed: tasks[index], index }
+}
+
+/** Puts a removed task back at its old position (or at the end); never adds it twice. */
+export function insertTaskAt(tasks: Task[], task: Task, index: number): Task[] {
+  if (tasks.some((t) => t.id === task.id)) return tasks
+  const at = Math.min(Math.max(index, 0), tasks.length)
+  return [...tasks.slice(0, at), task, ...tasks.slice(at)]
+}
+
 export function toggleTask(task: Task, now: number): Task {
   return task.done ? { ...task, done: false, completedAt: null } : { ...task, done: true, completedAt: now }
 }

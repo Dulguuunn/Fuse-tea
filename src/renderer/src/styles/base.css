@@ -328,6 +328,73 @@ textarea {
   color: var(--ink-soft);
 }
 
+/* ---------- Toast ---------- */
+
+.toast-region {
+  position: fixed;
+  left: calc(var(--sidebar-w) + (100vw - var(--sidebar-w)) / 2);
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 60;
+  pointer-events: none;
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 6px 6px 16px;
+  border-radius: var(--radius-md);
+  background: var(--ink);
+  color: var(--paper);
+  font-size: var(--text-sm);
+  box-shadow: var(--shadow-pop);
+  pointer-events: auto;
+  animation: toast-in 0.18s ease-out;
+}
+.toast-message {
+  max-width: 420px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.toast-action {
+  height: 28px;
+  margin-left: 8px;
+  padding: 0 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: #ffd84d;
+  font-weight: 600;
+  cursor: pointer;
+}
+.toast-action:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+:root[data-theme='dark'] .toast-action {
+  color: var(--accent-ink);
+}
+:root[data-theme='dark'] .toast-action:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+.toast-close {
+  width: 28px;
+  height: 28px;
+  color: inherit;
+  opacity: 0.7;
+}
+.toast-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: inherit;
+  opacity: 1;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
 .empty-state {
   display: flex;
   flex-direction: column;

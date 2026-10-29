@@ -41,6 +41,22 @@ test('a to-do due today is listed under Today and shown on the calendar', async 
   await app.close()
 })
 
+test('a deleted to-do can be brought back with Undo', async () => {
+  const { app, win } = await launch(freshDataDir())
+  await win.getByRole('button', { name: 'To-dos', exact: true }).click()
+  await win.getByLabel('New to-do').fill('Essay')
+  await win.getByRole('button', { name: 'Today', exact: true }).click()
+  await win.getByLabel('New to-do').press('Enter')
+  await win.locator('.task-row', { hasText: 'Essay' }).hover()
+  await win.getByRole('button', { name: 'Delete “Essay”' }).click()
+  await expect(win.locator('.task-row', { hasText: 'Essay' })).toHaveCount(0)
+  await expect(win.getByRole('status').filter({ hasText: 'Deleted “Essay”' })).toBeVisible()
+  await win.screenshot({ path: 'test-results/e2e/undo-toast.png' })
+  await win.getByRole('button', { name: 'Undo' }).click()
+  await expect(win.locator('.task-group', { hasText: 'Today' })).toContainText('Essay')
+  await app.close()
+})
+
 test('pressing Escape on "Delete class?" keeps the class dialog and its unsaved edits open', async () => {
   const { app, win } = await launch(freshDataDir())
   await win.getByRole('button', { name: 'Calendar', exact: true }).click()

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatDue, groupTasks, tasksOnDate, toggleTask } from '@shared/tasks'
+import { formatDue, groupTasks, insertTaskAt, removeTask, tasksOnDate, toggleTask } from '@shared/tasks'
 import type { Task } from '@shared/types'
 
 const task = (id: string, over: Partial<Task> = {}): Task => ({
@@ -93,5 +93,31 @@ describe('formatDue', () => {
   })
   it('adds the year when it is not this year', () => {
     expect(formatDue('2027-01-04', TODAY)).toBe('Mon, Jan 4, 2027')
+  })
+})
+
+describe('removeTask / insertTaskAt (undo)', () => {
+  const list = [task('a'), task('b'), task('c')]
+
+  it('returns the removed task and where it was, keeping the rest in order', () => {
+    const r = removeTask(list, 'b')
+    expect(r.removed?.id).toBe('b')
+    expect(r.index).toBe(1)
+    expect(ids(r.tasks)).toEqual(['a', 'c'])
+  })
+  it('does nothing for an unknown id', () => {
+    const r = removeTask(list, 'zzz')
+    expect(r.removed).toBeNull()
+    expect(ids(r.tasks)).toEqual(['a', 'b', 'c'])
+  })
+  it('puts a task back at the same place', () => {
+    const r = removeTask(list, 'b')
+    expect(ids(insertTaskAt(r.tasks, r.removed!, r.index))).toEqual(['a', 'b', 'c'])
+  })
+  it('puts it at the end if the list got shorter meanwhile', () => {
+    expect(ids(insertTaskAt([task('a')], task('z'), 5))).toEqual(['a', 'z'])
+  })
+  it('does not duplicate a task that is already back', () => {
+    expect(ids(insertTaskAt(list, task('b'), 1))).toEqual(['a', 'b', 'c'])
   })
 })

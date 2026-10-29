@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Sidebar } from './components/Sidebar'
+import { Toast } from './components/Toast'
 import { NotesPage } from './features/notes/NotesPage'
 import { NotesSidebar } from './features/notes/NotesSidebar'
 import { TodosPage } from './features/todos/TodosPage'
@@ -42,6 +43,7 @@ export default function App(): React.JSX.Element {
         {page === 'calendar' && <CalendarPage />}
         {page === 'settings' && <SettingsPage />}
       </main>
+      <Toast />
     </div>
   )
 }

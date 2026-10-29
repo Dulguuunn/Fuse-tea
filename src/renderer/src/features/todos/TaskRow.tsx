@@ -4,6 +4,7 @@ import { formatDue } from '@shared/tasks'
 import { formatTime, parseTime, toTimeInput } from '@shared/time'
 import type { Task, TimeFormat } from '@shared/types'
 import { useTasks } from '../../state/tasksStore'
+import { useUi } from '../../state/uiStore'
 
 export function TaskCheck({ task }: { task: Task }): React.JSX.Element {
   const toggle = useTasks((s) => s.toggle)
@@ -77,7 +78,19 @@ interface TaskRowProps {
 
 export function TaskRow({ task, today, timeFormat }: TaskRowProps): React.JSX.Element {
   const remove = useTasks((s) => s.remove)
+  const restore = useTasks((s) => s.restore)
+  const showToast = useUi((s) => s.showToast)
   const [editing, setEditing] = useState(false)
+
+  const deleteWithUndo = (): void => {
+    const removed = remove(task.id)
+    if (!removed) return
+    showToast({
+      message: `Deleted “${task.title}”`,
+      actionLabel: 'Undo',
+      onAction: () => restore(removed.task, removed.index)
+    })
+  }
   const overdue = !task.done && task.dueDate !== null && task.dueDate < today
 
   return (
@@ -100,7 +113,7 @@ export function TaskRow({ task, today, timeFormat }: TaskRowProps): React.JSX.El
             className="icon-btn task-delete"
             aria-label={`Delete “${task.title}”`}
             title="Delete"
-            onClick={() => remove(task.id)}
+            onClick={deleteWithUndo}
           >
             <Trash2 size={15} />
           </button>
