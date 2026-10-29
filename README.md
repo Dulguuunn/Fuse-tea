@@ -36,7 +36,9 @@ The left sidebar switches between **Notes**, **To-dos**, **Calendar** and **Sett
 
 ### Notes
 
-- **New note:** the pen button above the list, or **Ctrl+N** from anywhere.
+- **New note:** the pen button above the list, or **Ctrl+N** from anywhere. A new note you leave
+  completely empty (no title, no text, no picture) removes itself when you move on, so blank
+  "Untitled" notes don't pile up.
 - **Notebooks:** press **+** next to *Notebooks* to make one, e.g. one per class. Hover a notebook to
   rename or delete it. Deleting a notebook moves its notes to the Trash.
 - **Which notebook a note is in:** the small picker under the note's title.
@@ -74,7 +76,8 @@ The left sidebar switches between **Notes**, **To-dos**, **Calendar** and **Sett
   optionally a time, before adding.
 - To-dos are grouped into **Overdue** (red), **Today**, **Upcoming**, **No date**, and
   **Completed** (click to expand).
-- Click the circle to tick one off. Click its text to edit it. Hover to delete it.
+- Click the circle to tick one off. Click its text to edit it. Hover to delete it. Deleted by
+  mistake? Click **Undo** in the message that appears at the bottom for a few seconds.
 - To-dos with a due date also show at the top of that day in the **Calendar**, and you can tick them
   off there too.
 
@@ -85,7 +88,8 @@ The left sidebar switches between **Notes**, **To-dos**, **Calendar** and **Sett
   - Under **Every week**, set the day, start and end. Each time slot has its **own length**, so a
     class can be 1h 30m on Monday and 2h on Wednesday. Use **Add another day** for more slots.
 - **Change a time:**
-  - Click a class to type exact times.
+  - Click a class to type exact times. Once you've changed something in that editor, a stray click
+    outside it no longer closes it. Use **Save class** or **Cancel**.
   - **Drag** a class to move it, including to another day.
   - **Drag its bottom edge** to make it longer or shorter. Times snap to 5 minutes.
 - **One-off events** such as exams or deadlines happen on one date only. Use **New event**. They look

@@ -5,8 +5,9 @@ calendar. Built for one user (a student) on one PC. Electron + React + TypeScrip
 
 ## Status (2026-10-29)
 
-**Version 1 is complete** — all 13 plan tasks done, 115 unit tests + 4 e2e tests passing, packaged
-as `release/win-unpacked/Notes.exe`, Desktop + Start-menu shortcuts created for the user.
+**Version 1.1 is complete** — plan tasks 1–17 done (v1 + polish: to-do undo, editors keep unsaved
+changes on stray clicks, empty notes clean themselves up). 125 unit tests + 10 e2e tests passing,
+packaged as `release/win-unpacked/Notes.exe`, Desktop + Start-menu shortcuts created for the user.
 The user-facing guide is `README.md` (keep it in sync when behavior changes).
 
 ## Start here (every new session)
@@ -81,9 +82,21 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
 - [x] Task 11: Daily backups
 - [x] Task 12: Packaging, icon, Desktop shortcut
 - [x] Task 13: End-to-end tests, README, final docs
+- [x] Task 14: Undo after deleting a to-do (toast in `components/Toast.tsx`, `useUi.showToast`)
+- [x] Task 15: Class/event editors with unsaved changes ignore clicks outside (`Dialog closeOnBackdrop`)
+- [x] Task 16: Empty notes clean themselves up (`isEmptyNote`, `discardIfEmpty` in notesStore)
+- [x] Task 17: Rebuild exe, update README/CLAUDE.md
 
 ## Next ideas (not built — ask the user before starting any)
 
+Known polish left (from the v1 review, ranked):
+- Overlapping classes are drawn side by side and names get cut off ("Physi…") — smarter layout
+- Backups copy all attachments daily — could copy only changed files to save disk
+- Ctrl+N while a calendar editor is open switches to Notes and drops the editor
+- Note list previews run headings into text ("Second law Net force…")
+- Image paste errors use `window.alert` — use the toast instead
+
+Features:
 - Month view for the calendar
 - Reminder pop-ups (Windows notifications) for to-dos and classes
 - Semester start/end dates for classes; skip a class on a holiday
