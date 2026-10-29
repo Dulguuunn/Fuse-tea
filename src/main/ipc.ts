@@ -1,4 +1,4 @@
-import { ipcMain, shell } from 'electron'
+import { app, ipcMain, shell } from 'electron'
 import { IPC } from '@shared/ipc'
 import {
   normalizeCalendar,
@@ -44,6 +44,7 @@ export function registerIpc(storage: Storage): void {
   })
 
   ipcMain.handle(IPC.dataDir, () => storage.dir)
+  ipcMain.handle(IPC.version, () => app.getVersion())
   ipcMain.handle(IPC.openDataFolder, async () => {
     await shell.openPath(storage.dir)
   })

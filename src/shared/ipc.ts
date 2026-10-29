@@ -16,6 +16,7 @@ export const IPC = {
   settingsSave: 'settings:save',
   attachmentsSaveImage: 'attachments:save-image',
   dataDir: 'app:data-dir',
+  version: 'app:version',
   openDataFolder: 'app:open-data-folder',
   beforeClose: 'app:before-close',
   readyToClose: 'app:ready-to-close'
@@ -49,6 +50,7 @@ export interface NotesApi {
   }
   app: {
     dataDir(): Promise<string>
+    version(): Promise<string>
     openDataFolder(): Promise<void>
     /** Runs `cb` when the window is about to close; the window waits (max 3 s) for it to finish. */
     onBeforeClose(cb: () => Promise<void>): void

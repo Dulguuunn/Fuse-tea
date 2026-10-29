@@ -32,6 +32,7 @@ const api: NotesApi = {
   },
   app: {
     dataDir: () => invoke(IPC.dataDir),
+    version: () => invoke(IPC.version),
     openDataFolder: () => invoke(IPC.openDataFolder),
     onBeforeClose: (cb) => {
       ipcRenderer.on(IPC.beforeClose, () => {
