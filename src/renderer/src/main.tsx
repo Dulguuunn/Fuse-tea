@@ -9,6 +9,7 @@ import App from './App'
 import { saver } from './state/saver'
 import { useNotes } from './state/notesStore'
 import { useSettings } from './state/settingsStore'
+import { useTasks } from './state/tasksStore'
 
 // When the window is closing, finish any pending saves first.
 window.api.app.onBeforeClose(() => saver.flush())
@@ -17,7 +18,8 @@ window.api.app.onBeforeClose(() => saver.flush())
 async function loadAll(): Promise<void> {
   const loaders: Array<[string, () => Promise<void>]> = [
     ['settings', () => useSettings.getState().load()],
-    ['notes', () => useNotes.getState().load()]
+    ['notes', () => useNotes.getState().load()],
+    ['tasks', () => useTasks.getState().load()]
   ]
   await Promise.all(
     loaders.map(([name, load]) => load().catch((e: unknown) => console.error(`Could not load ${name}`, e)))
