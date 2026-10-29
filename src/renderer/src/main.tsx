@@ -7,17 +7,25 @@ import './styles/base.css'
 import './styles/sidebar.css'
 import App from './App'
 import { saver } from './state/saver'
+import { useNotes } from './state/notesStore'
 import { useSettings } from './state/settingsStore'
 
 // When the window is closing, finish any pending saves first.
 window.api.app.onBeforeClose(() => saver.flush())
 
+/** Load every store before the first render; one failing store doesn't block the others. */
+async function loadAll(): Promise<void> {
+  const loaders: Array<[string, () => Promise<void>]> = [
+    ['settings', () => useSettings.getState().load()],
+    ['notes', () => useNotes.getState().load()]
+  ]
+  await Promise.all(
+    loaders.map(([name, load]) => load().catch((e: unknown) => console.error(`Could not load ${name}`, e)))
+  )
+}
+
 async function start(): Promise<void> {
-  try {
-    await useSettings.getState().load()
-  } catch (e) {
-    console.error('Could not load settings', e)
-  }
+  await loadAll()
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <App />

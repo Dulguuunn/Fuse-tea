@@ -23,6 +23,7 @@ calendar. Built for one user (a student) on one PC. Electron + React + TypeScrip
 | `npm run e2e` | Build + Playwright end-to-end tests (`tests/e2e`, temp data dir) |
 | `npm run package` | Build `release/win-unpacked/Notes.exe` |
 | `npm run shortcut` | Create the Desktop shortcut to the exe |
+| `node scripts/seed-demo-data.mjs <dir>` | Fill a folder with demo notes/tasks/classes (for screenshots) |
 | `node scripts/screenshot.mjs out.png [--page Calendar] [--theme dark] [--data dir]` | Launch the built app against a temp data dir and save a screenshot (for visual checks) |
 
 **Never test against the real `data/` folder.** Set `NOTES_DATA_DIR` to a temp dir (the screenshot
@@ -58,7 +59,7 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
 - [x] Task 1: Project scaffold
 - [x] Task 2: Shared types, time utils, normalization, storage, IPC
 - [x] Task 3: App shell, theme, saver, settings store
-- [ ] Task 4: Notes — notebooks, list, search, pin, trash
+- [x] Task 4: Notes — notebooks, list, search, pin, trash
 - [ ] Task 5: Rich-text editor
 - [ ] Task 6: Images in notes
 - [ ] Task 7: To-dos page

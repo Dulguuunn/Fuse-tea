@@ -1,0 +1,245 @@
+.notes-page {
+  display: grid;
+  grid-template-columns: var(--list-w) minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+
+/* ---------- Note list ---------- */
+
+.note-list {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.note-list-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 14px 10px;
+}
+
+.search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 6px 0 10px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper-raised);
+  color: var(--graphite);
+  min-width: 0;
+}
+.search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--ink);
+}
+.search input::placeholder {
+  color: var(--graphite);
+}
+.search-clear {
+  width: 24px;
+  height: 24px;
+}
+
+.new-note {
+  width: 34px;
+  height: 34px;
+  color: var(--accent);
+}
+
+.note-list-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 18px 8px;
+}
+.note-list-head h2 {
+  font-size: var(--text-md);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.empty-trash {
+  margin-left: auto;
+  height: 26px;
+  color: var(--danger);
+}
+
+.note-list-empty {
+  height: auto;
+  padding-top: 64px;
+}
+
+.note-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0 8px 12px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.note-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  padding: 10px 12px 11px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.note-row:hover {
+  background: var(--paper-hover);
+}
+.note-row[aria-current='true'] {
+  background: var(--accent-soft);
+}
+.note-rows li + li .note-row:not([aria-current='true']) {
+  box-shadow: 0 -1px 0 var(--rule);
+}
+.note-rows li:has(+ li .note-row[aria-current='true']) + li .note-row,
+.note-rows li .note-row:hover {
+  box-shadow: none;
+}
+
+.note-row-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.note-row-pin {
+  flex: none;
+  color: var(--accent);
+}
+.note-row-preview {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+.note-row-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-xs);
+  color: var(--graphite);
+}
+.note-row-book {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Open note ---------- */
+
+.note-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--paper-raised);
+}
+
+.note-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--rule);
+}
+.note-header-tools {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+.note-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.note-header-trash {
+  justify-content: space-between;
+  background: var(--danger-soft);
+  color: var(--ink-soft);
+  padding-left: 24px;
+}
+
+.notebook-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 4px 0 9px;
+  border-radius: var(--radius-sm);
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  flex: none;
+}
+.notebook-picker:hover {
+  background: var(--paper-hover);
+}
+.notebook-picker select {
+  border: none;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  max-width: 180px;
+}
+.notebook-picker select option {
+  background: var(--paper-raised);
+  color: var(--ink);
+}
+
+.note-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 28px 48px 64px;
+}
+
+.note-title {
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: var(--text-3xl);
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.note-title::placeholder {
+  color: var(--rule-strong);
+}
