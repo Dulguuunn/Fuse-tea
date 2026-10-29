@@ -3,14 +3,23 @@
 Personal, offline Windows desktop app replacing UpNote: rich-text notes, to-dos, and a weekly class
 calendar. Built for one user (a student) on one PC. Electron + React + TypeScript.
 
+## Status (2026-10-29)
+
+**Version 1 is complete** — all 13 plan tasks done, 115 unit tests + 3 e2e tests passing, packaged
+as `release/win-unpacked/Notes.exe`, Desktop + Start-menu shortcuts created for the user.
+The user-facing guide is `README.md` (keep it in sync when behavior changes).
+
 ## Start here (every new session)
 
-1. Read the **Progress** checklist below — it says what's done and what's next.
+1. Read **Status**, **Progress** and **Next ideas** below.
 2. The design is in `docs/superpowers/specs/2026-10-29-notes-app-design.md`.
    The task-by-task plan is in `docs/superpowers/plans/2026-10-29-notes-app.md`.
 3. `git log --oneline` shows one commit per finished task.
-4. Work one task at a time: tests first, then code, then `npm test` + `npm run typecheck`, then
-   update this checklist and commit.
+4. For a new feature: agree on a short design with the user, add it as numbered task(s) to a plan,
+   then do one task at a time: tests first, then code, then `npm test` + `npm run typecheck`
+   (+ `npm run e2e` for UI changes), update this file, commit.
+5. After any code change the user only sees it once the exe is rebuilt: `npm run package`
+   (the app must be closed) — tell the user, or run it for them.
 
 ## Commands
 
@@ -52,7 +61,10 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
 - Renderer persists through the debounced `saver` (400 ms); main asks the UI to flush before closing.
 - Pure logic goes in `src/shared` with a unit test; components stay thin.
 - Path aliases: `@shared/*`, `@renderer/*`.
-- Files use LF in the editor; git may warn about CRLF — harmless.
+- Line endings: LF everywhere except `.bat` (CRLF) — enforced by `.gitattributes`.
+- Copy style: plain sentence case, active verbs, errors say what to do next (see README tone).
+- Visual language: cool "paper and ink" palette (tokens in `styles/tokens.css`), highlighter colors
+  for classes (`CLASS_COLORS` in `src/shared/calendar.ts`), fonts Onest (UI) + Unbounded (titles).
 
 ## Progress
 
@@ -68,7 +80,17 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
 - [x] Task 10: Settings page
 - [x] Task 11: Daily backups
 - [x] Task 12: Packaging, icon, Desktop shortcut
-- [ ] Task 13: End-to-end tests, README, final docs
+- [x] Task 13: End-to-end tests, README, final docs
+
+## Next ideas (not built — ask the user before starting any)
+
+- Month view for the calendar
+- Reminder pop-ups (Windows notifications) for to-dos and classes
+- Semester start/end dates for classes; skip a class on a holiday
+- Tags for notes; sort options for the note list
+- Export a note to PDF; print
+- Custom 24h time inputs (native `<input type=time>` follows the Windows locale, so it may show AM/PM)
+- Sync between devices (would need a cloud service — big change)
 
 ## Gotchas learned
 
