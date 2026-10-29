@@ -1,0 +1,72 @@
+/* Design tokens. "Paper and ink": cool graph-paper whites, navy ink, highlighter colors for classes.
+   Light is the default; [data-theme='dark'] on <html> switches to the night palette. */
+
+:root {
+  --font-ui: 'Onest Variable', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Unbounded Variable', 'Onest Variable', 'Segoe UI', sans-serif;
+
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+
+  --sidebar-w: 236px;
+  --list-w: 300px;
+
+  /* Text on highlighter-colored calendar blocks stays dark in both themes. */
+  --block-ink: #1f2a44;
+}
+
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --paper: #f7f8fb;
+  --paper-raised: #ffffff;
+  --paper-sunk: #eceff5;
+  --paper-hover: #e3e7f0;
+  --ink: #1f2a44;
+  --ink-soft: #4a5570;
+  --graphite: #7a8299;
+  --rule: #dfe3ec;
+  --rule-strong: #c6cddc;
+  --grid-line: #e7eaf2;
+  --accent: #2f4cdd;
+  --accent-hover: #2740c2;
+  --accent-soft: #e2e7fd;
+  --accent-ink: #ffffff;
+  --danger: #c43d3d;
+  --danger-soft: #fbe8e8;
+  --now-line: #e5484d;
+  --highlight: #ffe58a;
+  --shadow-pop: 0 14px 36px rgba(31, 42, 68, 0.16), 0 2px 6px rgba(31, 42, 68, 0.08);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #151a24;
+  --paper-raised: #1b2130;
+  --paper-sunk: #10141c;
+  --paper-hover: #232a3b;
+  --ink: #e7eaf2;
+  --ink-soft: #b4bccd;
+  --graphite: #808a9f;
+  --rule: #283043;
+  --rule-strong: #364058;
+  --grid-line: #212838;
+  --accent: #8199ff;
+  --accent-hover: #9aaeff;
+  --accent-soft: #252f57;
+  --accent-ink: #0f1424;
+  --danger: #ff7b7b;
+  --danger-soft: #3a1f26;
+  --now-line: #ff6369;
+  --highlight: #8a7421;
+  --shadow-pop: 0 14px 36px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
+}

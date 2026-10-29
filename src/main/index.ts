@@ -1,6 +1,7 @@
 import { join } from 'node:path'
-import { app, BrowserWindow, ipcMain, Menu, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, nativeTheme, shell } from 'electron'
 import { IPC } from '@shared/ipc'
+import { normalizeSettings } from '@shared/normalize'
 import { resolveDataDir } from './dataDir'
 import { registerIpc } from './ipc'
 import { Storage } from './storage'
@@ -30,7 +31,7 @@ function flushBeforeClose(win: BrowserWindow): void {
   })
 }
 
-function createWindow(): BrowserWindow {
+function createWindow(backgroundColor: string): BrowserWindow {
   const win = new BrowserWindow({
     width: 1280,
     height: 800,
@@ -38,7 +39,7 @@ function createWindow(): BrowserWindow {
     minHeight: 600,
     show: false,
     title: 'Notes',
-    backgroundColor: '#f6f4ef',
+    backgroundColor,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
@@ -74,6 +75,17 @@ function createWindow(): BrowserWindow {
   return win
 }
 
+const dataDir = resolveDataDir({
+  env: process.env,
+  isPackaged: app.isPackaged,
+  execPath: process.execPath,
+  appPath: app.getAppPath()
+})
+
+// Test runs (NOTES_DATA_DIR set) get their own browser profile, so they never collide with the
+// real app's single-instance lock or cache.
+if (process.env.NOTES_DATA_DIR) app.setPath('userData', join(dataDir, '.electron-profile'))
+
 // Only one copy of the app may run, so two windows never write the same files.
 if (!app.requestSingleInstanceLock()) {
   app.quit()
@@ -84,16 +96,13 @@ if (!app.requestSingleInstanceLock()) {
     mainWindow.focus()
   })
 
-  void app.whenReady().then(() => {
-    const dataDir = resolveDataDir({
-      env: process.env,
-      isPackaged: app.isPackaged,
-      execPath: process.execPath,
-      appPath: app.getAppPath()
-    })
-    registerIpc(new Storage(dataDir))
+  void app.whenReady().then(async () => {
+    const storage = new Storage(dataDir)
+    registerIpc(storage)
+    const { theme } = await storage.readJson('settings.json', normalizeSettings)
+    const dark = theme === 'dark' || (theme === 'system' && nativeTheme.shouldUseDarkColors)
     Menu.setApplicationMenu(null)
-    mainWindow = createWindow()
+    mainWindow = createWindow(dark ? '#151a24' : '#f7f8fb')
     flushBeforeClose(mainWindow)
     mainWindow.on('closed', () => (mainWindow = null))
   })
