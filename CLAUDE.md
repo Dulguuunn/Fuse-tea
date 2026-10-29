@@ -5,7 +5,7 @@ calendar. Built for one user (a student) on one PC. Electron + React + TypeScrip
 
 ## Status (2026-10-29)
 
-**Version 1 is complete** — all 13 plan tasks done, 115 unit tests + 3 e2e tests passing, packaged
+**Version 1 is complete** — all 13 plan tasks done, 115 unit tests + 4 e2e tests passing, packaged
 as `release/win-unpacked/Notes.exe`, Desktop + Start-menu shortcuts created for the user.
 The user-facing guide is `README.md` (keep it in sync when behavior changes).
 

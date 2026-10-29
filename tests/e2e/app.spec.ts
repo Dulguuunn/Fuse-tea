@@ -41,6 +41,22 @@ test('a to-do due today is listed under Today and shown on the calendar', async 
   await app.close()
 })
 
+test('pressing Escape on "Delete class?" keeps the class dialog and its unsaved edits open', async () => {
+  const { app, win } = await launch(freshDataDir())
+  await win.getByRole('button', { name: 'Calendar', exact: true }).click()
+  await win.getByRole('button', { name: 'New class' }).click()
+  await win.getByPlaceholder('e.g. Physics').fill('Math')
+  await win.getByRole('button', { name: 'Save class' }).click()
+  await win.locator('.cal-block', { hasText: 'Math' }).click()
+  await win.getByPlaceholder('e.g. Physics').fill('Math 2 (unsaved)')
+  await win.getByRole('button', { name: 'Delete class' }).click()
+  await expect(win.getByRole('dialog', { name: /Delete/ })).toBeVisible()
+  await win.keyboard.press('Escape')
+  await expect(win.getByRole('dialog', { name: /Delete/ })).toHaveCount(0)
+  await expect(win.getByPlaceholder('e.g. Physics')).toHaveValue('Math 2 (unsaved)')
+  await app.close()
+})
+
 test('a class from 09:00 to 10:30 on Monday appears on the calendar', async () => {
   const { app, win } = await launch(freshDataDir())
   await win.getByRole('button', { name: 'Calendar', exact: true }).click()

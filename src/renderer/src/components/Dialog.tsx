@@ -27,10 +27,14 @@ export function Dialog({ title, onClose, children, footer, width = 440 }: Dialog
       style={{ width }}
       aria-label={title}
       onCancel={(e) => {
+        // React passes this to dialogs further up the tree (e.g. a class dialog under its delete
+        // confirmation); only the top one should close.
         e.preventDefault()
+        e.stopPropagation()
         onClose()
       }}
       onMouseDown={(e) => {
+        e.stopPropagation()
         if (e.target === ref.current) onClose()
       }}
     >
