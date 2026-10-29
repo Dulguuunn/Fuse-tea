@@ -266,6 +266,68 @@ textarea {
   flex: 1;
 }
 
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.form-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.field.grow {
+  flex: 1;
+  min-width: 0;
+}
+.field-error {
+  color: var(--danger);
+  font-size: var(--text-xs);
+}
+.danger-text {
+  color: var(--danger);
+}
+
+/* ---------- Popover menu ---------- */
+
+.popover {
+  position: fixed;
+  z-index: 50;
+  padding: 6px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-md);
+  background: var(--paper-raised);
+  box-shadow: var(--shadow-pop);
+}
+.popover-label {
+  padding: 6px 8px 6px;
+  font-size: var(--text-xs);
+  color: var(--graphite);
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  height: 34px;
+  padding: 0 9px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--text-md);
+  text-align: left;
+  cursor: pointer;
+}
+.menu-item:hover,
+.menu-item:focus-visible {
+  background: var(--paper-hover);
+  outline: none;
+}
+.menu-item svg {
+  color: var(--ink-soft);
+}
+
 .empty-state {
   display: flex;
   flex-direction: column;

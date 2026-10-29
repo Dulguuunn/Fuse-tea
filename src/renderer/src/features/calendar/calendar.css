@@ -258,6 +258,118 @@
   filter: brightness(0.9) saturate(0.92);
 }
 
+.cal-block {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.cal-block:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.cal-block-handle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 7px;
+  cursor: ns-resize;
+}
+.cal-block:hover .cal-block-handle::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 18px;
+  height: 3px;
+  margin-left: -9px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--block-ink) 35%, transparent);
+}
+.cal-block[data-dragging] {
+  opacity: 0.35;
+}
+.cal-block[data-ghost] {
+  z-index: 3;
+  pointer-events: none;
+  box-shadow: 0 8px 22px rgba(31, 42, 68, 0.28), 0 0 0 1.5px var(--paper-raised);
+}
+
+.day-col {
+  cursor: cell;
+}
+
+.calendar-hint {
+  margin: -6px 32px 12px;
+  max-width: 760px;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+/* ---------- New item menu ---------- */
+
+.new-item-menu {
+  width: 220px;
+}
+
+/* ---------- Class / event dialogs ---------- */
+
+.swatches {
+  display: flex;
+  gap: 8px;
+}
+.swatch {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(31, 42, 68, 0.15);
+  cursor: pointer;
+}
+.swatch[aria-checked='true'] {
+  border-color: var(--paper-raised);
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.session-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.session-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.session-row .select {
+  width: 146px;
+}
+.add-session {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding-left: 6px;
+  color: var(--accent);
+}
+
+.time-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.time-range .input {
+  width: 118px;
+}
+.duration {
+  min-width: 52px;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
 .now-line {
   position: absolute;
   left: 0;

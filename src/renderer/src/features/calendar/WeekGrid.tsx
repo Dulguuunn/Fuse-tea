@@ -1,11 +1,13 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { layoutDay, type Occurrence } from '@shared/calendar'
+import type { Slot } from '@shared/calendarEdit'
 import { tasksOnDate } from '@shared/tasks'
 import { clamp, formatTime, toISODate } from '@shared/time'
 import type { Task, TimeFormat } from '@shared/types'
 import { useTasks } from '../../state/tasksStore'
 import { useUi } from '../../state/uiStore'
 import { CalendarBlock } from './CalendarBlock'
+import { useBlockDrag } from './useBlockDrag'
 
 const MIN_HOUR_PX = 34
 const MAX_HOUR_PX = 72
@@ -74,14 +76,34 @@ export interface WeekGridProps {
   occurrences: Occurrence[]
   range: { start: number; end: number }
   timeFormat: TimeFormat
+  onOpen(occ: Occurrence): void
+  onMove(occ: Occurrence, dayIndex: number, slot: Slot): void
+  onSlot(dayIndex: number, minute: number, x: number, y: number): void
 }
 
-export function WeekGrid({ days, today, occurrences, range, timeFormat }: WeekGridProps): React.JSX.Element {
+export function WeekGrid({
+  days,
+  today,
+  occurrences,
+  range,
+  timeFormat,
+  onOpen,
+  onMove,
+  onSlot
+}: WeekGridProps): React.JSX.Element {
   const tasks = useTasks((s) => s.tasks)
   const hours = (range.end - range.start) / 60
   const [scrollRef, hourPx] = useHourHeight(hours)
   const ppm = hourPx / 60
   const now = useNowMinutes()
+  const bodyRef = useRef<HTMLDivElement>(null)
+
+  const columnAt = (clientX: number): number => {
+    const cols = [...(bodyRef.current?.querySelectorAll<HTMLElement>('.day-col') ?? [])]
+    const i = cols.findIndex((c) => clientX < c.getBoundingClientRect().right)
+    return i === -1 ? cols.length - 1 : i
+  }
+  const { bind, preview, justDragged } = useBlockDrag({ ppm, columnAt, onOpen, onMove })
 
   return (
     <div className="week" style={{ '--hour': `${hourPx}px` } as React.CSSProperties}>
@@ -111,7 +133,7 @@ export function WeekGrid({ days, today, occurrences, range, timeFormat }: WeekGr
       </div>
 
       <div className="week-scroll" ref={scrollRef}>
-        <div className="week-row week-body" style={{ height: hours * hourPx }}>
+        <div ref={bodyRef} className="week-row week-body" style={{ height: hours * hourPx }}>
           <div className="week-gutter hour-labels">
             {Array.from({ length: hours }, (_, i) => (
               <span key={i} style={{ top: i * hourPx }}>
@@ -119,12 +141,21 @@ export function WeekGrid({ days, today, occurrences, range, timeFormat }: WeekGr
               </span>
             ))}
           </div>
-          {days.map((d) => {
+          {days.map((d, dayIndex) => {
             const iso = toISODate(d)
             const items = layoutDay(occurrences.filter((o) => o.date === iso))
             const isToday = iso === today
             return (
-              <div key={iso} className="day-col" data-today={isToday || undefined}>
+              <div
+                key={iso}
+                className="day-col"
+                data-today={isToday || undefined}
+                onClick={(e) => {
+                  if (justDragged.current || e.target !== e.currentTarget) return
+                  const y = e.clientY - e.currentTarget.getBoundingClientRect().top
+                  onSlot(dayIndex, range.start + y / ppm, e.clientX, e.clientY)
+                }}
+              >
                 {items.map((item) => (
                   <CalendarBlock
                     key={item.key}
@@ -132,8 +163,19 @@ export function WeekGrid({ days, today, occurrences, range, timeFormat }: WeekGr
                     top={(item.start - range.start) * ppm}
                     height={Math.max((item.end - item.start) * ppm, 16)}
                     timeFormat={timeFormat}
+                    handlers={bind(item, dayIndex)}
+                    dragging={preview?.occ.key === item.key}
                   />
                 ))}
+                {preview && preview.dayIndex === dayIndex && (
+                  <CalendarBlock
+                    item={{ ...preview.occ, ...preview.slot, col: 0, cols: 1 }}
+                    top={(preview.slot.start - range.start) * ppm}
+                    height={Math.max((preview.slot.end - preview.slot.start) * ppm, 16)}
+                    timeFormat={timeFormat}
+                    ghost
+                  />
+                )}
                 {isToday && now >= range.start && now <= range.end && (
                   <div className="now-line" style={{ top: (now - range.start) * ppm }} aria-hidden />
                 )}
