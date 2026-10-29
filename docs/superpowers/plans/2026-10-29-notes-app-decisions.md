@@ -1,0 +1,58 @@
+# Build log: decisions made while implementing the plan
+
+Every place the implementation deviated from or filled a gap in the plan, with the reason and the cost if wrong.
+
+- Setup: Ruling: work directly on `main` in a brand-new empty repo — user said "start doing the code already ... just do whats the best"; a feature branch adds nothing for a fresh personal project — cost if wrong: none (history identical, can branch later).
+- Pre-flight:
+- - T2→T3: T2 produces NotesApi.app.onBeforeClose(cb); T3 consumes it for saver.flush. OK. Ruling: preload's onBeforeClose wrapper awaits cb then sends IPC.readyToClose itself (readyToClose not exposed to UI) — keeps API minimal — cost if wrong: trivial.
+- - T3→T4/T7/T8: saver.schedule(key, write) consumed with keys 'note:<id>', 'notebooks', 'tasks', 'calendar'. OK.
+- - T4→T5: useNotes.updateNote(id, patch) consumed by NoteEditor. OK.
+- - T7→T8: tasksOnDate(tasks, date) + useTasks.toggle consumed by calendar task chips. OK (T7 precedes T8).
+- - T8→T9: useCalendar.saveClass/saveEvent/updateSession consumed by dialogs + drag. OK.
+- - T2→T10: api.app.dataDir/openDataFolder consumed by settings page. OK.
+- Task 1: Ruling: installed @playwright/test in Task 1 (plan: Task 13) and added scripts/screenshot.mjs — needed to visually verify every UI task — cost if wrong: none
+- Task 1: complete (commits 99da717..4e152e5, tests: npm test →    Duration  205ms (transform 45%, import 35%, worker 12%, tests 7%))
+- Task 2: Ruling: NotesApi.attachments added in Task 6 instead of Task 2 — no handler exists until then; keeps typecheck honest — cost if wrong: none
+- Task 2: Ruling: added .gitattributes (eol=lf) — silences CRLF warnings, keeps files consistent — cost if wrong: none
+- Task 2: complete (commits 4e152e5..f2de915, tests: npm test →    Duration  284ms (transform 32%, import 31%, tests 26%, worker 10%))
+- Task 3: Ruling: saver gained maxWait (2000 ms) so continuous typing still saves at least every 2 s — spec only said "debounce ~400 ms"; pure debounce would never save during long typing — cost if wrong: slightly more writes.
+- Task 3: Ruling: when NOTES_DATA_DIR is set, userData (Chromium profile + single-instance lock) moves to <dataDir>/.electron-profile — otherwise tests/screenshots collide with the user's running app — cost if wrong: a dot-folder inside custom data dirs.
+- Task 3: Ruling: added styles/sidebar.css and useApplyTheme.ts (not in plan's file list); main reads settings.theme to pick window background (no white flash in dark mode) — cost if wrong: none.
+- Task 3: Ruling: fonts Onest (UI) + Unbounded (display) bundled via @fontsource (offline); chosen for Cyrillic incl. Mongolian Ө/Ү — cost if wrong: swap two imports.
+- Task 3: complete (commits f2de915..368236b, tests: npm test →    Duration  272ms (import 37%, tests 30%, transform 21%, worker 12%))
+- Task 4: Ruling: note actions (notebook picker, pin, trash, restore/delete-forever) live in NoteHeader.tsx, not a context menu — plan said "context menu" only for notebooks; notebooks use hover rename/delete icons instead (discoverable, no custom menu component) — cost if wrong: add a menu later.
+- Task 4: Ruling: added pure helpers trashNotebookNotes/restoreNote/formatEdited to shared/notes.ts with tests (covers spec "restoring a note whose notebook is gone") — cost if wrong: none.
+- Task 4: Ruling: added scripts/seed-demo-data.mjs (demo data for screenshots) — cost if wrong: none.
+- Task 4: complete (commits 368236b..88c3a66, tests: npm test →    Duration  386ms (import 36%, tests 35%, transform 17%, worker 12%))
+- Task 5: Ruling: notebook picker moved from the header bar to a meta line under the title ("Physics ▾  Edited 13:38") so the formatting toolbar fits on one row — cost if wrong: move back.
+- Task 5: Ruling: Ctrl+click opens links (plain click edits); read-only (trashed) notes open links on plain click — cost if wrong: none.
+- Task 5: Verified Review Focus 1 manually (type then close immediately → text present after relaunch); automated in Task 13.
+- Task 5: complete (commits 88c3a66..60199b8, tests: npm test →    Duration  352ms (transform 60%, import 20%, tests 14%, worker 6%))
+- Task 6: Ruling: attachment URLs are attachment://file/<uuid>.<ext> (plan: attachment://<file>) — standard schemes lowercase the host, so the name lives in the path — cost if wrong: none (internal).
+- Task 6: Ruling: also allowed bmp, 25 MB cap, "Insert image" toolbar button, and CSP img-src https: so images in content pasted from websites still show — cost if wrong: remote images load when such a note opens.
+- Task 6: complete (commits 60199b8..fd26db3, tests: npm test →    Duration  306ms (import 37%, tests 30%, transform 20%, worker 12%))
+- Task 7: Ruling: added formatDue() to shared/tasks.ts (tested) and useToday() hook (rolls over at midnight / on focus) — needed for "Today/Tomorrow" labels and grouping in a long-running app — cost if wrong: none.
+- Task 7: Ruling: quick-add has "No date / Today / Tomorrow" chips + date/time inputs; due date resets after each add — cost if wrong: one line.
+- Task 7: complete (commits fd26db3..f937c46, tests: npm test →    Duration  447ms (import 37%, tests 33%, transform 19%, worker 10%))
+- Task 8: Ruling: hour height auto-fits the window (34–72 px/hour, scrolls below 34) so a whole school day is visible without scrolling — cost if wrong: fixed height is a one-line change.
+- Task 8: Ruling: one-off events are drawn hatched to distinguish them from weekly classes; added weekLabel() (tested); DEFAULT_COLOR changed to highlighter blue #7cc4ff so dark text stays readable — cost if wrong: none.
+- Task 8: complete (commits f937c46..326b04c, tests: npm test →    Duration  379ms (tests 39%, import 30%, transform 21%, worker 9%))
+- Task 9: Ruling: added slotAt() (click → quarter-hour start, 1:30 default length) with tests; header has New class / New event buttons in addition to click-on-grid menu — cost if wrong: none.
+- Task 9: Ruling: dragging a class slot changes that weekly slot for every week (it is recurring); dragging an event moves only that event — matches spec "drag block to move (time + day)" — cost if wrong: users wanting one-week exceptions (out of scope v1).
+- Task 9: Bug found+fixed during live test: drag state used the closure of whichever block received the pointer event; a missed pointerup could apply a drag to the wrong class. Active drag now carries its own occurrence, cancels when no button is pressed, and finishes on lostpointercapture. Verified by replaying the failing sequence (incl. mid-drag screenshot).
+- Task 9: complete (commits 326b04c..a1eec51, tests: npm test →    Duration  416ms (import 35%, tests 34%, transform 20%, worker 11%))
+- Task 10: Ruling: added app.version() to the IPC API and a reusable Segmented control; native <input type=time> shows AM/PM per Windows locale regardless of the 24h setting (Chromium limitation) — cost if wrong: replace with custom time inputs.
+- Task 10: complete (commits a1eec51..fc981a4, tests: npm test →    Duration  377ms (import 35%, tests 34%, transform 21%, worker 10%))
+- Task 11: Ruling: backups write to <day>.partial then rename (a crash never leaves a half backup that counts toward the 7); also re-checked every 3 h for long-running sessions; skips .electron-profile and *.tmp — cost if wrong: none.
+- Task 11: complete (commits fc981a4..8696989, tests: npm test →    Duration  432ms (tests 38%, import 33%, transform 17%, worker 11%))
+- Task 12: Ruling: shortcut script also adds a Start-menu entry (searchable "Notes") besides the Desktop one; ran it for the user (that was the requested deliverable) — cost if wrong: delete one .lnk.
+- Task 12: Ruling: build/icon.ico is generated (multi-size PNG-in-ICO) and also shipped as extraResources for the window icon; signAndEditExecutable left default (worked) — cost if wrong: none.
+- Task 12: complete (commits 8696989..104b4f1, tests: npm test →    Duration  505ms (transform 55%, tests 21%, import 18%, worker 6%))
+- Task 13: e2e tests passed first run (acceptance tests of built features); mutation check: disabling flushBeforeClose makes 'note typed right before closing' FAIL (verified), restored.
+- Task 13: complete (commits 104b4f1..636dbeb, tests: npm test →    Duration  573ms (tests 35%, import 33%, transform 21%, worker 10%))
+- Final review: self-review (subagents not requested by the user; system guidance says not to spawn agents unprompted)
+- Final: fixed nested dialog Escape closing the parent dialog (lost unsaved class/event edits) — e2e 'pressing Escape on "Delete class?" keeps the class dialog…' RED→GREEN, suite 115/115 unit + 4/4 e2e
+- Final: minor (deferred): clicking outside a class/event dialog closes it without asking, discarding unsaved edits
+- Final: minor (deferred): daily backups copy attachments too; with many large screenshots 7 backups can use a lot of disk
+- Final: minor (deferred): Ctrl+N while a calendar dialog is open switches to Notes and drops the dialog
+- Final: minor (deferred): a hand-edited settings.json with non-whole-hour dayStart/dayEnd misaligns grid lines vs hour labels (UI only allows whole hours)
