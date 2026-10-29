@@ -60,7 +60,7 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
 - [x] Task 2: Shared types, time utils, normalization, storage, IPC
 - [x] Task 3: App shell, theme, saver, settings store
 - [x] Task 4: Notes — notebooks, list, search, pin, trash
-- [ ] Task 5: Rich-text editor
+- [x] Task 5: Rich-text editor
 - [ ] Task 6: Images in notes
 - [ ] Task 7: To-dos page
 - [ ] Task 8: Calendar week view
@@ -76,3 +76,9 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
   (or just `npm run dev`, which downloads it on first use).
 - TypeScript is v7 (native compiler); `baseUrl` is not used — `paths` are relative to each tsconfig.
 - Windows PowerShell 5.1 can't write UTF-8 without BOM — create files with the editor tool, not `Set-Content`.
+- TipTap `editor.setEditable(x)` emits an update by default → always pass `false` as 2nd arg, or opening a
+  note bumps its "edited" time. TipTap `focus()` is deferred a frame; use `editor.view.focus()` when
+  keystrokes follow immediately.
+- TipTap 3 task items render as `ul[data-type="taskList"] > li[data-checked]` (no data-type on the li).
+- E2E/flow scripts must wait for the UI (e.g. `.note-row`) before pressing keys: the app renders only
+  after all stores load.

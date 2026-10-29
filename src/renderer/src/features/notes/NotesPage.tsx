@@ -1,11 +1,11 @@
 import { filterNotes } from '@shared/notes'
 import { useNotes } from '../../state/notesStore'
-import { NoteHeader } from './NoteHeader'
+import { NoteEditor } from './NoteEditor'
 import { NoteList } from './NoteList'
 import './notes.css'
 
 export function NotesPage(): React.JSX.Element {
-  const { notes, view, query, selectedId, updateNote, createNote } = useNotes()
+  const { notes, view, query, selectedId, createNote } = useNotes()
   const note = filterNotes(notes, view, query).find((n) => n.id === selectedId) ?? null
 
   return (
@@ -13,19 +13,7 @@ export function NotesPage(): React.JSX.Element {
       <NoteList />
       <section className="note-pane" aria-label="Note">
         {note ? (
-          <>
-            <NoteHeader note={note} />
-            <div className="note-body">
-              <input
-                className="note-title"
-                value={note.title}
-                placeholder="Untitled"
-                aria-label="Title"
-                readOnly={note.deletedAt !== null}
-                onChange={(e) => updateNote(note.id, { title: e.target.value })}
-              />
-            </div>
-          </>
+          <NoteEditor key={note.id} note={note} />
         ) : (
           <div className="empty-state">
             <strong>Pick a note, or start a new one</strong>
