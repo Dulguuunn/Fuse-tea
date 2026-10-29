@@ -3,12 +3,15 @@ import { pathToFileURL } from 'node:url'
 import { app, BrowserWindow, ipcMain, Menu, nativeTheme, net, protocol, shell } from 'electron'
 import { IPC } from '@shared/ipc'
 import { normalizeSettings } from '@shared/normalize'
+import { todayISO } from '@shared/time'
 import { ATTACHMENT_SCHEME, resolveAttachmentPath } from './attachments'
+import { runDailyBackup } from './backup'
 import { resolveDataDir } from './dataDir'
 import { registerIpc } from './ipc'
 import { Storage } from './storage'
 
 const CLOSE_FLUSH_TIMEOUT_MS = 3000
+const BACKUP_CHECK_MS = 3 * 60 * 60 * 1000
 
 let mainWindow: BrowserWindow | null = null
 
@@ -101,6 +104,15 @@ function serveAttachments(): void {
   })
 }
 
+/** One backup per day: at startup, and re-checked every few hours in case the app stays open. */
+function scheduleBackups(): void {
+  const run = (): void => {
+    runDailyBackup(dataDir, todayISO()).catch((e: unknown) => console.error('[backup] failed', e))
+  }
+  setTimeout(run, 5_000)
+  setInterval(run, BACKUP_CHECK_MS)
+}
+
 // Only one copy of the app may run, so two windows never write the same files.
 if (!app.requestSingleInstanceLock()) {
   app.quit()
@@ -120,6 +132,7 @@ if (!app.requestSingleInstanceLock()) {
     Menu.setApplicationMenu(null)
     mainWindow = createWindow(dark ? '#151a24' : '#f7f8fb')
     flushBeforeClose(mainWindow)
+    scheduleBackups()
     mainWindow.on('closed', () => (mainWindow = null))
   })
 
