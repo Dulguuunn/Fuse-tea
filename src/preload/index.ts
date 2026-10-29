@@ -27,6 +27,9 @@ const api: NotesApi = {
     get: () => invoke(IPC.settingsGet),
     save: (settings) => invoke(IPC.settingsSave, settings)
   },
+  attachments: {
+    saveImage: (bytes, ext) => invoke(IPC.attachmentsSaveImage, bytes, ext)
+  },
   app: {
     dataDir: () => invoke(IPC.dataDir),
     openDataFolder: () => invoke(IPC.openDataFolder),

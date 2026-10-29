@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import { useEditorState, type Editor } from '@tiptap/react'
 import {
   Bold,
@@ -7,6 +7,7 @@ import {
   Heading2,
   Heading3,
   Highlighter,
+  ImagePlus,
   Italic,
   Link2,
   List,
@@ -20,6 +21,7 @@ import {
   Undo2
 } from 'lucide-react'
 import { Dialog } from '../../components/Dialog'
+import { IMAGE_ACCEPT, imageFiles, insertImages } from './imageFiles'
 
 interface ToolProps {
   label: string
@@ -117,6 +119,7 @@ function LinkDialog({ editor, onClose }: { editor: Editor; onClose(): void }): R
 
 export function EditorToolbar({ editor }: { editor: Editor }): React.JSX.Element {
   const [linkOpen, setLinkOpen] = useState(false)
+  const fileInput = useRef<HTMLInputElement>(null)
   const s = useEditorState({
     editor,
     selector: ({ editor: e }) => ({
@@ -194,9 +197,23 @@ export function EditorToolbar({ editor }: { editor: Editor }): React.JSX.Element
       <Tool label="Link" active={s.link} onClick={() => setLinkOpen(true)}>
         <Link2 size={16} />
       </Tool>
+      <Tool label="Insert image" onClick={() => fileInput.current?.click()}>
+        <ImagePlus size={16} />
+      </Tool>
       <Tool label="Divider line" shortcut="---" onClick={() => run().setHorizontalRule().run()}>
         <Minus size={16} />
       </Tool>
+      <input
+        ref={fileInput}
+        type="file"
+        accept={IMAGE_ACCEPT}
+        multiple
+        hidden
+        onChange={(e) => {
+          void insertImages(editor.view, imageFiles(e.target.files))
+          e.target.value = ''
+        }}
+      />
       {linkOpen && <LinkDialog editor={editor} onClose={() => setLinkOpen(false)} />}
     </div>
   )

@@ -14,6 +14,7 @@ export const IPC = {
   calendarSave: 'calendar:save',
   settingsGet: 'settings:get',
   settingsSave: 'settings:save',
+  attachmentsSaveImage: 'attachments:save-image',
   dataDir: 'app:data-dir',
   openDataFolder: 'app:open-data-folder',
   beforeClose: 'app:before-close',
@@ -41,6 +42,10 @@ export interface NotesApi {
   settings: {
     get(): Promise<Settings>
     save(settings: Settings): Promise<void>
+  }
+  attachments: {
+    /** Saves image bytes into data/attachments; resolves to the URL to put in the note. */
+    saveImage(bytes: Uint8Array, ext: string): Promise<string>
   }
   app: {
     dataDir(): Promise<string>

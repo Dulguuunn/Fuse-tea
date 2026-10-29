@@ -1,7 +1,9 @@
 import { join } from 'node:path'
-import { app, BrowserWindow, ipcMain, Menu, nativeTheme, shell } from 'electron'
+import { pathToFileURL } from 'node:url'
+import { app, BrowserWindow, ipcMain, Menu, nativeTheme, net, protocol, shell } from 'electron'
 import { IPC } from '@shared/ipc'
 import { normalizeSettings } from '@shared/normalize'
+import { ATTACHMENT_SCHEME, resolveAttachmentPath } from './attachments'
 import { resolveDataDir } from './dataDir'
 import { registerIpc } from './ipc'
 import { Storage } from './storage'
@@ -86,6 +88,19 @@ const dataDir = resolveDataDir({
 // real app's single-instance lock or cache.
 if (process.env.NOTES_DATA_DIR) app.setPath('userData', join(dataDir, '.electron-profile'))
 
+// attachment://file/<name> serves pasted images from data/attachments (must be declared before ready).
+protocol.registerSchemesAsPrivileged([
+  { scheme: ATTACHMENT_SCHEME, privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true } }
+])
+
+function serveAttachments(): void {
+  protocol.handle(ATTACHMENT_SCHEME, (request) => {
+    const file = resolveAttachmentPath(dataDir, request.url)
+    if (!file) return new Response('Not found', { status: 404 })
+    return net.fetch(pathToFileURL(file).toString())
+  })
+}
+
 // Only one copy of the app may run, so two windows never write the same files.
 if (!app.requestSingleInstanceLock()) {
   app.quit()
@@ -99,6 +114,7 @@ if (!app.requestSingleInstanceLock()) {
   void app.whenReady().then(async () => {
     const storage = new Storage(dataDir)
     registerIpc(storage)
+    serveAttachments()
     const { theme } = await storage.readJson('settings.json', normalizeSettings)
     const dark = theme === 'dark' || (theme === 'system' && nativeTheme.shouldUseDarkColors)
     Menu.setApplicationMenu(null)

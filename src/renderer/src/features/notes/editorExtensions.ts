@@ -1,5 +1,6 @@
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
+import Image from '@tiptap/extension-image'
 import { TaskItem, TaskList } from '@tiptap/extension-list'
 import { Placeholder } from '@tiptap/extensions'
 import type { Extensions } from '@tiptap/react'
@@ -15,6 +16,7 @@ export function editorExtensions(): Extensions {
     TaskList,
     TaskItem.configure({ nested: true }),
     Highlight,
+    Image.configure({ allowBase64: false }),
     Placeholder.configure({ placeholder: 'Start writing…' })
   ]
 }

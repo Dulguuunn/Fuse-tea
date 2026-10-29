@@ -5,6 +5,7 @@ import { useNotes } from '../../state/notesStore'
 import { EditorToolbar } from './EditorToolbar'
 import { NoteHeader, NoteMeta } from './NoteHeader'
 import { editorExtensions } from './editorExtensions'
+import { imageFiles, insertImages } from './imageFiles'
 import './editor.css'
 
 /** Title + rich-text body of one note. Mounted with key={note.id}, so each note gets a fresh editor. */
@@ -19,7 +20,22 @@ export function NoteEditor({ note }: { note: Note }): React.JSX.Element {
     editable: !readOnly,
     shouldRerenderOnTransaction: false,
     editorProps: {
-      attributes: { class: 'prose', 'aria-label': 'Note text' }
+      attributes: { class: 'prose', 'aria-label': 'Note text' },
+      // Pasted or dropped images (e.g. a Win+Shift+S screenshot) are saved into the data folder.
+      handlePaste: (view, event) => {
+        const files = imageFiles(event.clipboardData?.files)
+        if (files.length === 0) return false
+        void insertImages(view, files)
+        return true
+      },
+      handleDrop: (view, event, _slice, moved) => {
+        const files = imageFiles(event.dataTransfer?.files)
+        if (moved || files.length === 0) return false
+        event.preventDefault()
+        const pos = view.posAtCoords({ left: event.clientX, top: event.clientY })?.pos
+        void insertImages(view, files, pos)
+        return true
+      }
     },
     onUpdate: ({ editor }) => {
       updateNote(note.id, { content: editor.getJSON(), text: editor.getText({ blockSeparator: '\n' }) })

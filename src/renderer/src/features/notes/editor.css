@@ -8,7 +8,7 @@
   padding-left: 6px;
 }
 .tool {
-  width: 28px;
+  width: 26px;
   height: 28px;
 }
 .tool:disabled {
@@ -19,7 +19,7 @@
 .tool-sep {
   width: 1px;
   height: 18px;
-  margin: 0 5px;
+  margin: 0 3px;
   background: var(--rule);
 }
 
@@ -164,6 +164,15 @@
   text-decoration: underline;
   text-underline-offset: 2px;
   cursor: text;
+}
+
+.prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0.8em 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--rule);
 }
 
 .prose hr {

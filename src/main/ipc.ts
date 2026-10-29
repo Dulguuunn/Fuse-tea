@@ -7,6 +7,7 @@ import {
   normalizeSettings,
   normalizeTasks
 } from '@shared/normalize'
+import { attachmentUrl, saveAttachment } from './attachments'
 import type { Storage } from './storage'
 
 /** Everything the UI can ask the main process to do. Incoming data is normalized before it is saved. */
@@ -36,6 +37,11 @@ export function registerIpc(storage: Storage): void {
   ipcMain.handle(IPC.settingsSave, (_e, raw: unknown) =>
     storage.writeJson('settings.json', normalizeSettings(raw))
   )
+
+  ipcMain.handle(IPC.attachmentsSaveImage, async (_e, bytes: unknown, ext: unknown) => {
+    if (!(bytes instanceof Uint8Array) || typeof ext !== 'string') throw new Error('Invalid image')
+    return attachmentUrl(await saveAttachment(storage.dir, bytes, ext))
+  })
 
   ipcMain.handle(IPC.dataDir, () => storage.dir)
   ipcMain.handle(IPC.openDataFolder, async () => {

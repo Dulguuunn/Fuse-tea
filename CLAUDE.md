@@ -61,7 +61,7 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
 - [x] Task 3: App shell, theme, saver, settings store
 - [x] Task 4: Notes — notebooks, list, search, pin, trash
 - [x] Task 5: Rich-text editor
-- [ ] Task 6: Images in notes
+- [x] Task 6: Images in notes
 - [ ] Task 7: To-dos page
 - [ ] Task 8: Calendar week view
 - [ ] Task 9: Calendar editing — dialogs and drag
