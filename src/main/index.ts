@@ -44,6 +44,7 @@ function createWindow(backgroundColor: string): BrowserWindow {
     minHeight: 600,
     show: false,
     title: 'Notes',
+    icon: app.isPackaged ? join(process.resourcesPath, 'icon.ico') : join(app.getAppPath(), 'build', 'icon.ico'),
     backgroundColor,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
