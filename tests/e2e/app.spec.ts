@@ -28,6 +28,41 @@ test('a note typed right before closing the window is still there after reopenin
   await app.close()
 })
 
+test('an empty note disappears when you open another note', async () => {
+  const dir = freshDataDir()
+  let { app, win } = await launch(dir)
+  await win.keyboard.press('Control+n')
+  await win.keyboard.type('Kept')
+  await win.keyboard.press('Control+n') // a second, empty note…
+  await expect(win.locator('.note-row', { hasText: 'Untitled' })).toHaveCount(1)
+  await win.locator('.note-row', { hasText: 'Kept' }).click() // …is gone once you leave it
+  await expect(win.locator('.note-row', { hasText: 'Untitled' })).toHaveCount(0)
+  await expect(win.locator('.note-row')).toHaveCount(1)
+  await app.close()
+  ;({ app, win } = await launch(dir))
+  await expect(win.locator('.note-row')).toHaveCount(1)
+  await app.close()
+})
+
+test('pressing Ctrl+N twice leaves just one new note', async () => {
+  const { app, win } = await launch(freshDataDir())
+  await win.keyboard.press('Control+n')
+  await win.keyboard.press('Control+n')
+  await expect(win.locator('.note-row', { hasText: 'Untitled' })).toHaveCount(1)
+  await app.close()
+})
+
+test('an empty note left open when the app closed is gone next time', async () => {
+  const dir = freshDataDir()
+  let { app, win } = await launch(dir)
+  await win.keyboard.press('Control+n')
+  await expect(win.locator('.note-row', { hasText: 'Untitled' })).toHaveCount(1)
+  await app.close()
+  ;({ app, win } = await launch(dir))
+  await expect(win.locator('.note-row')).toHaveCount(0)
+  await app.close()
+})
+
 test('a to-do due today is listed under Today and shown on the calendar', async () => {
   const { app, win } = await launch(freshDataDir())
   await win.getByRole('button', { name: 'To-dos', exact: true }).click()

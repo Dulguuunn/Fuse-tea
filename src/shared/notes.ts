@@ -27,6 +27,17 @@ export function filterNotes(notes: Note[], view: NoteView, query: string): Note[
   return result.sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.updatedAt - a.updatedAt)
 }
 
+function hasImage(node: unknown): boolean {
+  if (typeof node !== 'object' || node === null) return false
+  const n = node as { type?: unknown; content?: unknown }
+  return n.type === 'image' || (Array.isArray(n.content) && n.content.some(hasImage))
+}
+
+/** Nothing worth keeping: no title, no text, no pictures. Such notes are cleaned up automatically. */
+export function isEmptyNote(note: Note): boolean {
+  return !note.title.trim() && !note.text.trim() && !hasImage(note.content)
+}
+
 export function previewText(text: string, max = 120): string {
   const flat = text.replace(/\s+/g, ' ').trim()
   return flat.length > max ? flat.slice(0, max - 1).trimEnd() + '…' : flat

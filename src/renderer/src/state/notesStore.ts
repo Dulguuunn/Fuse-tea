@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { newId } from '@shared/id'
-import { filterNotes, restoreNote, trashNotebookNotes, type NoteView } from '@shared/notes'
+import { filterNotes, isEmptyNote, restoreNote, trashNotebookNotes, type NoteView } from '@shared/notes'
 import type { Note, Notebook } from '@shared/types'
 import { saver } from './saver'
 
@@ -59,6 +59,13 @@ export const useNotes = create<NotesState>((set, get) => {
   const leaveSelection = (id: string): void => {
     if (get().selectedId === id) set({ selectedId: neighbour(id) })
   }
+  /** Moving away from a note that was never written in deletes it for good (no Trash clutter). */
+  const discardIfEmpty = (id: string | null): void => {
+    const note = id ? get().notes.find((n) => n.id === id) : undefined
+    if (!note || !isEmptyNote(note)) return
+    set({ notes: get().notes.filter((n) => n.id !== note.id) })
+    removeNoteFile(note.id)
+  }
 
   return {
     notes: [],
@@ -69,21 +76,28 @@ export const useNotes = create<NotesState>((set, get) => {
     selectedId: null,
 
     async load() {
-      const [notes, notebooks] = await Promise.all([window.api.notes.list(), window.api.notebooks.list()])
+      const [all, notebooks] = await Promise.all([window.api.notes.list(), window.api.notebooks.list()])
+      // Empty notes left over from last time (e.g. Ctrl+N, then the app was closed) are dropped.
+      const notes = all.filter((n) => !isEmptyNote(n))
+      all.filter(isEmptyNote).forEach((n) => removeNoteFile(n.id))
       set({ notes, notebooks, loaded: true, selectedId: firstInView({ kind: 'all' }, notes) })
     },
 
     setView(view) {
+      discardIfEmpty(get().selectedId)
       set({ view, query: '', selectedId: firstInView(view) })
     },
     setQuery(query) {
       set({ query })
     },
     select(id) {
+      const previous = get().selectedId
+      if (previous !== id) discardIfEmpty(previous)
       set({ selectedId: id })
     },
 
     createNote() {
+      discardIfEmpty(get().selectedId)
       const { view } = get()
       const now = Date.now()
       const note: Note = {

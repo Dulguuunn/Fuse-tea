@@ -3,6 +3,7 @@ import {
   countByNotebook,
   filterNotes,
   formatEdited,
+  isEmptyNote,
   previewText,
   restoreNote,
   trashNotebookNotes
@@ -118,5 +119,26 @@ describe('formatEdited', () => {
   })
   it('previous years include the year', () => {
     expect(formatEdited(new Date(2025, 11, 31).getTime(), now, '24h')).toBe('Dec 31, 2025')
+  })
+})
+
+describe('isEmptyNote', () => {
+  const image = { type: 'doc', content: [{ type: 'image', attrs: { src: 'attachment://file/x.png' } }] }
+  const blankParagraph = { type: 'doc', content: [{ type: 'paragraph' }] }
+
+  it('is empty with no title, no text and no content', () => {
+    expect(isEmptyNote(note('a', { title: '' }))).toBe(true)
+  })
+  it('treats spaces and blank lines as empty', () => {
+    expect(isEmptyNote(note('a', { title: '   ', text: '\n  \n', content: blankParagraph }))).toBe(true)
+  })
+  it('is not empty with a title', () => {
+    expect(isEmptyNote(note('a', { title: 'Lab' }))).toBe(false)
+  })
+  it('is not empty with text', () => {
+    expect(isEmptyNote(note('a', { title: '', text: 'hi' }))).toBe(false)
+  })
+  it('is not empty when it only holds an image', () => {
+    expect(isEmptyNote(note('a', { title: '', text: '', content: image }))).toBe(false)
   })
 })
