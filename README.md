@@ -34,6 +34,11 @@ shortcut keeps working.
 
 The left sidebar switches between **Notes**, **To-dos**, **Calendar** and **Settings**.
 
+- **Need more room?** Click the panel button next to **notes** at the top of the sidebar, or press
+  **Ctrl+\\**. The sidebar shrinks to a thin strip of icons; hover an icon to see its name. Notebooks are
+  hidden while it's shrunk. Click the button or press **Ctrl+\\** again to bring it back. The app
+  remembers your choice.
+
 ### Notes
 
 - **New note:** the pen button above the list, or **Ctrl+N** from anywhere. A new note you leave
@@ -100,7 +105,7 @@ The left sidebar switches between **Notes**, **To-dos**, **Calendar** and **Sett
 
 ### Settings
 
-- **Theme:** System (follows Windows), Light, or Dark.
+- **Theme:** System (follows Windows), Light, or Dark. Dark is pure black with white accents.
 - **Time format:** 24-hour or 12-hour.
 - **Week starts on:** Monday or Sunday.
 - **Hours shown on the calendar:** 07:00–22:00 by default. A class outside these hours still shows,
@@ -159,6 +164,27 @@ This needs **Node.js** (installed on this PC). Commands for a developer terminal
 | `npm run e2e` | Build, then click through the real app automatically, using a throwaway data folder |
 | `npm run package` | Build `release\win-unpacked\Notes.exe` (same as `Build App.bat`) |
 | `npm run shortcut` | Create the Desktop and Start-menu shortcuts (same as the `.bat`) |
+
+### Changing the app icon, its name, or the sidebar icons
+
+After any of these, rebuild (**`Build App.bat`**), then run **`Create Desktop Shortcut.bat`** again so
+the shortcut picks up the change.
+
+- **App icon** (the picture on the exe, the Desktop shortcut, the taskbar and the window): replace
+  `build\icon.ico` (and `build\icon.png`) with your own. The `.ico` should include a 256×256 size; a
+  free online "PNG to ICO" converter can make one from any square picture. Don't run
+  `scripts\make-icon.mjs` afterwards: it redraws the original icon over yours. Windows sometimes keeps
+  showing the old icon for a while; restarting File Explorer or the PC clears its cache.
+- **App name** ("Notes"): it's set in `productName` in both `package.json` and `electron-builder.yml`
+  (this decides the exe's file name), the window title in `src\main\index.ts` and
+  `src\renderer\index.html`, and the exe and shortcut names in `Build App.bat` and
+  `scripts\create-desktop-shortcut.ps1`. Change them all together; the easiest way is to ask Claude.
+- **Sidebar icons** (next to Notes, To-dos, Calendar, Settings): they come from the free
+  [Lucide](https://lucide.dev/icons) icon set and are listed in `src\renderer\src\components\Sidebar.tsx`
+  (`NotebookPen`, `ListChecks`, `CalendarDays`, `Settings`). To change one, find an icon on lucide.dev,
+  write its name in PascalCase ("book-open" → `BookOpen`), and swap it in both the `import` line at the
+  top and the `NAV` list. The icons for All notes, Pinned, notebooks and Trash are in
+  `src\renderer\src\features\notes\NotesSidebar.tsx`.
 
 ---
 

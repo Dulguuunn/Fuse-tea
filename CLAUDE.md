@@ -3,11 +3,11 @@
 Personal, offline Windows desktop app replacing UpNote: rich-text notes, to-dos, and a weekly class
 calendar. Built for one user (a student) on one PC. Electron + React + TypeScript.
 
-## Status (2026-10-29)
+## Status (2026-10-30)
 
-**Version 1.1 is complete** — plan tasks 1–17 done (v1 + polish: to-do undo, editors keep unsaved
-changes on stray clicks, empty notes clean themselves up). 125 unit tests + 10 e2e tests passing,
-packaged as `release/win-unpacked/Notes.exe`, Desktop + Start-menu shortcuts created for the user.
+**Version 1.2 is complete** — plan tasks 1–21 done (v1 + v1.1 polish + v1.2 look: pure black dark
+theme, note text at full width, sidebar shrinks to an icon strip with Ctrl+\). 126 unit tests + 11 e2e
+tests passing, packaged as `release/win-unpacked/Notes.exe`, Desktop + Start-menu shortcuts created.
 The user-facing guide is `README.md` (keep it in sync when behavior changes).
 
 ## Start here (every new session)
@@ -64,8 +64,9 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
 - Path aliases: `@shared/*`, `@renderer/*`.
 - Line endings: LF everywhere except `.bat` (CRLF) — enforced by `.gitattributes`.
 - Copy style: plain sentence case, active verbs, errors say what to do next (see README tone).
-- Visual language: cool "paper and ink" palette (tokens in `styles/tokens.css`), highlighter colors
-  for classes (`CLASS_COLORS` in `src/shared/calendar.ts`), fonts Onest (UI) + Unbounded (titles).
+- Visual language: "paper and ink" light palette and a pure-black, no-tint dark palette with white
+  accents (tokens in `styles/tokens.css`; the user uses dark — keep it free of blue/purple), highlighter
+  colors for classes (`CLASS_COLORS` in `src/shared/calendar.ts`), fonts Onest (UI) + Unbounded (titles).
 
 ## Progress
 
@@ -86,6 +87,10 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
 - [x] Task 15: Class/event editors with unsaved changes ignore clicks outside (`Dialog closeOnBackdrop`)
 - [x] Task 16: Empty notes clean themselves up (`isEmptyNote`, `discardIfEmpty` in notesStore)
 - [x] Task 17: Rebuild exe, update README/CLAUDE.md
+- [x] Task 18: Black dark theme (neutral tokens, white accent; user disliked the navy/periwinkle look)
+- [x] Task 19: Note text uses the full pane width (no 760px cap, 32px side padding)
+- [x] Task 20: Sidebar shrinks to an icon strip (`Settings.sidebarCollapsed`, `toggleSidebar`, Ctrl+\)
+- [x] Task 21: Rebuild exe, update README/CLAUDE.md
 
 ## Next ideas (not built — ask the user before starting any)
 
