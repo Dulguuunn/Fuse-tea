@@ -48,25 +48,26 @@
   --shadow-pop: 0 14px 36px rgba(31, 42, 68, 0.16), 0 2px 6px rgba(31, 42, 68, 0.08);
 }
 
+/* Dark is pure black with neutral grays and white accents: no blue or purple tint. */
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --paper: #151a24;
-  --paper-raised: #1b2130;
-  --paper-sunk: #10141c;
-  --paper-hover: #232a3b;
-  --ink: #e7eaf2;
-  --ink-soft: #b4bccd;
-  --graphite: #808a9f;
-  --rule: #283043;
-  --rule-strong: #364058;
-  --grid-line: #212838;
-  --accent: #8199ff;
-  --accent-hover: #9aaeff;
-  --accent-soft: #252f57;
-  --accent-ink: #0f1424;
-  --danger: #ff7b7b;
-  --danger-soft: #3a1f26;
-  --now-line: #ff6369;
+  --paper: #000000;
+  --paper-raised: #0a0a0a;
+  --paper-sunk: #000000;
+  --paper-hover: #1a1a1a;
+  --ink: #f2f2f2;
+  --ink-soft: #b8b8b8;
+  --graphite: #808080;
+  --rule: #222222;
+  --rule-strong: #3a3a3a;
+  --grid-line: #161616;
+  --accent: #ffffff;
+  --accent-hover: #d6d6d6;
+  --accent-soft: #2a2a2a;
+  --accent-ink: #000000;
+  --danger: #ff6b6b;
+  --danger-soft: #2a1212;
+  --now-line: #ff5c5c;
   --highlight: #8a7421;
-  --shadow-pop: 0 14px 36px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-pop: 0 14px 36px rgba(0, 0, 0, 0.8), 0 0 0 1px #2a2a2a;
 }

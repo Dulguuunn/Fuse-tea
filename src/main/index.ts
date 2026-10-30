@@ -131,7 +131,7 @@ if (!app.requestSingleInstanceLock()) {
     const { theme } = await storage.readJson('settings.json', normalizeSettings)
     const dark = theme === 'dark' || (theme === 'system' && nativeTheme.shouldUseDarkColors)
     Menu.setApplicationMenu(null)
-    mainWindow = createWindow(dark ? '#151a24' : '#f7f8fb')
+    mainWindow = createWindow(dark ? '#000000' : '#f7f8fb')
     flushBeforeClose(mainWindow)
     scheduleBackups()
     mainWindow.on('closed', () => (mainWindow = null))

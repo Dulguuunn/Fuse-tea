@@ -82,6 +82,11 @@
   color: var(--block-ink);
   background: linear-gradient(transparent 38%, #ffd84d 38%, #ffd84d 90%, transparent 90%);
 }
+/* On black the dark digits above a half-height swipe would vanish, so the swipe covers them. */
+:root[data-theme='dark'] .day-head[data-today] .day-num {
+  background: #ffd84d;
+  border-radius: 3px;
+}
 
 /* ---------- Due tasks strip ---------- */
 
