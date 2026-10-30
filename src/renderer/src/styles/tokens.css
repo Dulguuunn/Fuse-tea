@@ -18,6 +18,7 @@
   --radius-lg: 14px;
 
   --sidebar-w: 236px;
+  --sidebar-w-collapsed: 56px;
   --list-w: 300px;
 
   /* Text on highlighter-colored calendar blocks stays dark in both themes. */

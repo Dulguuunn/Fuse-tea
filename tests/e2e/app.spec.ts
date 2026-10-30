@@ -63,6 +63,24 @@ test('an empty note left open when the app closed is gone next time', async () =
   await app.close()
 })
 
+test('the sidebar shrinks to icons, still switches pages, and stays shrunk after a restart', async () => {
+  const dir = freshDataDir()
+  let { app, win } = await launch(dir)
+  const notebooks = win.locator('.side-group-head', { hasText: 'Notebooks' })
+  await expect(notebooks).toBeVisible()
+  await win.getByRole('button', { name: 'Hide sidebar' }).click()
+  await expect(notebooks).toBeHidden()
+  await win.getByRole('button', { name: 'To-dos', exact: true }).click()
+  await expect(win.getByLabel('New to-do')).toBeVisible()
+  await win.screenshot({ path: 'test-results/e2e/sidebar-collapsed.png' })
+  await app.close()
+  ;({ app, win } = await launch(dir))
+  await expect(win.getByRole('button', { name: 'Show sidebar' })).toBeVisible()
+  await win.keyboard.press('Control+Backslash')
+  await expect(win.locator('.side-group-head', { hasText: 'Notebooks' })).toBeVisible()
+  await app.close()
+})
+
 test('a to-do due today is listed under Today and shown on the calendar', async () => {
   const { app, win } = await launch(freshDataDir())
   await win.getByRole('button', { name: 'To-dos', exact: true }).click()

@@ -7,12 +7,19 @@
   border-right: 1px solid var(--rule);
 }
 
+.sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 0 14px 10px;
+}
+
 .wordmark {
   font-family: var(--font-display);
   font-size: 19px;
   font-weight: 600;
   letter-spacing: -0.02em;
-  padding: 0 10px 18px;
   color: var(--ink);
 }
 
@@ -166,4 +173,22 @@
 .nav-bottom {
   padding-top: 10px;
   border-top: 1px solid var(--rule);
+}
+
+/* ---------- Collapsed: a strip of section icons (labels become tooltips) ---------- */
+
+.sidebar[data-collapsed] {
+  padding: 18px 8px 12px;
+}
+.sidebar[data-collapsed] .sidebar-head {
+  justify-content: center;
+  padding: 0 0 14px;
+}
+.sidebar[data-collapsed] .wordmark,
+.sidebar[data-collapsed] .nav-item span {
+  display: none;
+}
+.sidebar[data-collapsed] .nav-item {
+  justify-content: center;
+  padding: 0;
 }

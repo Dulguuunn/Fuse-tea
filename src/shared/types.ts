@@ -73,6 +73,8 @@ export interface Settings {
   dayEnd: number
   weekStartsOn: 0 | 1
   timeFormat: TimeFormat
+  /** Left sidebar shrunk to a strip of section icons (notebooks hidden). */
+  sidebarCollapsed: boolean
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -80,7 +82,8 @@ export const DEFAULT_SETTINGS: Settings = {
   dayStart: 420,
   dayEnd: 1320,
   weekStartsOn: 1,
-  timeFormat: '24h'
+  timeFormat: '24h',
+  sidebarCollapsed: false
 }
 
 export const DEFAULT_COLOR = '#7cc4ff'

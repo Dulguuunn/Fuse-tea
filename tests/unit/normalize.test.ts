@@ -23,6 +23,11 @@ describe('normalizeSettings', () => {
     const s = normalizeSettings({ dayStart: 900, dayEnd: 600 })
     expect([s.dayStart, s.dayEnd]).toEqual([DEFAULT_SETTINGS.dayStart, DEFAULT_SETTINGS.dayEnd])
   })
+  it('keeps the sidebar collapsed only when that was saved as true', () => {
+    expect(normalizeSettings({ sidebarCollapsed: true }).sidebarCollapsed).toBe(true)
+    expect(normalizeSettings({ sidebarCollapsed: 'yes' }).sidebarCollapsed).toBe(false)
+    expect(normalizeSettings({}).sidebarCollapsed).toBe(false)
+  })
   it('handles garbage', () => {
     expect(normalizeSettings(undefined)).toEqual(DEFAULT_SETTINGS)
     expect(normalizeSettings('x')).toEqual(DEFAULT_SETTINGS)

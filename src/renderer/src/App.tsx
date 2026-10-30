@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Sidebar } from './components/Sidebar'
+import { Sidebar, toggleSidebar } from './components/Sidebar'
 import { Toast } from './components/Toast'
 import { NotesPage } from './features/notes/NotesPage'
 import { NotesSidebar } from './features/notes/NotesSidebar'
@@ -11,7 +11,7 @@ import { useSettings } from './state/settingsStore'
 import { useUi } from './state/uiStore'
 import { useApplyTheme } from './useApplyTheme'
 
-/** Ctrl+N starts a new note from anywhere in the app. */
+/** Ctrl+N starts a new note from anywhere in the app; Ctrl+\ hides or shows the sidebar. */
 function useGlobalShortcuts(): void {
   useEffect(() => {
     const onKey = (e: KeyboardEvent): void => {
@@ -19,6 +19,10 @@ function useGlobalShortcuts(): void {
         e.preventDefault()
         useUi.getState().setPage('notes')
         useNotes.getState().createNote()
+      }
+      if (e.ctrlKey && !e.shiftKey && !e.altKey && e.code === 'Backslash') {
+        e.preventDefault()
+        toggleSidebar()
       }
     }
     window.addEventListener('keydown', onKey)

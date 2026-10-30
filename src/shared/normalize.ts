@@ -34,6 +34,7 @@ export function normalizeSettings(raw: unknown): Settings {
   if (r.theme === 'system' || r.theme === 'light' || r.theme === 'dark') s.theme = r.theme
   if (r.weekStartsOn === 0 || r.weekStartsOn === 1) s.weekStartsOn = r.weekStartsOn
   if (r.timeFormat === '24h' || r.timeFormat === '12h') s.timeFormat = r.timeFormat
+  s.sidebarCollapsed = bool(r.sidebarCollapsed)
   const start = isMinute(r.dayStart) ? r.dayStart : s.dayStart
   const end = isMinute(r.dayEnd) ? r.dayEnd : s.dayEnd
   if (start < end) {
