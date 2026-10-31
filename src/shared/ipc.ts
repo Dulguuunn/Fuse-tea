@@ -1,6 +1,6 @@
 // The contract between the UI (renderer) and the main process. The preload script implements
 // NotesApi with these channels and exposes it as `window.api`.
-import type { CalendarData, Note, Notebook, Settings, Task } from './types'
+import type { CalendarData, Note, Notebook, Settings, Task, Theme } from './types'
 
 export const IPC = {
   notesList: 'notes:list',
@@ -29,6 +29,8 @@ export interface LockStatus {
   enabled: boolean
   /** True when the lock is off, or the right code was entered since launch. */
   unlocked: boolean
+  /** The chosen theme, so the lock screen can match it before settings are unlocked. */
+  theme: Theme
 }
 
 export type LockResult =

@@ -13,7 +13,10 @@ import type { Storage } from './storage'
 
 /** Everything the UI can ask the main process to do. Incoming data is normalized before it is saved. */
 export function registerIpc(storage: Storage, lock: Lock): void {
-  ipcMain.handle(IPC.lockStatus, () => lock.status())
+  ipcMain.handle(IPC.lockStatus, async () => ({
+    ...lock.status(),
+    theme: (await storage.readJson('settings.json', normalizeSettings)).theme
+  }))
   ipcMain.handle(IPC.lockUnlock, (_e, code: unknown) => lock.unlock(String(code)))
   ipcMain.handle(IPC.lockChange, (_e, current: unknown, next: unknown) =>
     lock.change(String(current), next === null ? null : String(next))

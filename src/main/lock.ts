@@ -72,7 +72,7 @@ export class Lock {
     await this.storage.writeJson(FILE, this.file)
   }
 
-  status(): LockStatus {
+  status(): Omit<LockStatus, 'theme'> {
     return { enabled: this.file.enabled, unlocked: !this.file.enabled || this.unlocked }
   }
 

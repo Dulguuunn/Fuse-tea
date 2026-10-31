@@ -5,7 +5,7 @@ calendar. Built for one user (a student) on one PC. Electron + React + TypeScrip
 
 ## Status (2026-11-01)
 
-**Version 1.3 is in progress** — v1.2 plus tasks 22–27 (see Progress): app renamed **Ponder**, icon from
+**Version 1.3 is complete** — v1.2 plus tasks 22–27 (see Progress): app renamed **Ponder**, icon from
 the user's cloud photo, launch lock (code 8848), repeating calendar events, and the user's daily routine
 loaded as data. The user-facing guide is `README.md` (keep it in sync when behavior changes).
 The app is packaged as `release/win-unpacked/Ponder.exe` (the old `Notes.exe` build is replaced on rebuild).
@@ -97,7 +97,7 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
 - [x] Task 24: Launch lock, default code 8848 (`src/main/lock.ts`, `LockScreen`, Settings → Privacy)
 - [x] Task 25: Repeating events (`src/shared/recurrence.ts`, `CalendarEvent.repeat`, `RepeatField`)
 - [x] Task 26: Daily routine data (`src/shared/routine.ts`, `scripts/setup-routine.mjs`)
-- [ ] Task 27: Rebuild exe, run the routine setup on the real data, final docs
+- [x] Task 27: Rebuild exe, routine loaded into the real data (2026-11-01), final docs
 
 ## Next ideas (not built — ask the user before starting any)
 

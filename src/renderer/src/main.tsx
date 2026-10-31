@@ -43,7 +43,7 @@ async function start(): Promise<void> {
   const root = createRoot(document.getElementById('root')!)
   const lock = await window.api.lock.status()
   if (lock.unlocked) renderApp(root)
-  else root.render(<LockScreen onUnlocked={() => renderApp(root)} />)
+  else root.render(<LockScreen theme={lock.theme} onUnlocked={() => renderApp(root)} />)
 }
 
 void start()

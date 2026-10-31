@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Lock } from 'lucide-react'
 import type { LockResult } from '@shared/ipc'
+import type { Theme } from '@shared/types'
 import { useApplyTheme } from '../useApplyTheme'
 import './lock.css'
 
@@ -12,8 +13,8 @@ export function lockErrorText(result: Exclude<LockResult, { ok: true }>): string
 }
 
 /** Shown on launch while the lock is on. Calls onUnlocked once the main process accepts the code. */
-export function LockScreen({ onUnlocked }: { onUnlocked(): void }): React.JSX.Element {
-  useApplyTheme('system') // settings are locked away too, so follow Windows
+export function LockScreen({ theme, onUnlocked }: { theme: Theme; onUnlocked(): void }): React.JSX.Element {
+  useApplyTheme(theme)
   const [code, setCode] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
