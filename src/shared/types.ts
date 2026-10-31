@@ -47,14 +47,27 @@ export interface ClassItem {
   sessions: ClassSession[]
 }
 
+/** How an event repeats. The event's own `date` is the first day. */
+export interface Repeat {
+  every: 'day' | 'week'
+  /** Every N days or weeks (1 = every day/week). */
+  interval: number
+  /** For weekly rules: which weekdays (0 = Sunday). Empty means the weekday of the first date. */
+  weekdays: number[]
+  /** Last day it can happen (inclusive), or null to go on forever. */
+  until: string | null
+}
+
 export interface CalendarEvent {
   id: string
   title: string
+  /** The day of a one-off event, or the first day of a repeating one. */
   date: string
   start: number
   end: number
   color: string
   location: string
+  repeat?: Repeat
 }
 
 export interface CalendarData {

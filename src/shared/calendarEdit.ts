@@ -1,7 +1,7 @@
 import { clamp, snap } from './time'
 
 /** Shortest class or event, in minutes. */
-export const MIN_DURATION = 15
+export const MIN_DURATION = 5
 const DAY_END = 1440
 const DEFAULT_LENGTH = 90
 

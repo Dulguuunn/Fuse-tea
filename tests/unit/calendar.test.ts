@@ -89,7 +89,8 @@ const item = (key: string, start: number, end: number): Occurrence => ({
   color: '#000000',
   date: '2026-10-29',
   start,
-  end
+  end,
+  repeats: false
 })
 
 describe('layoutDay', () => {

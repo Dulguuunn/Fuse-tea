@@ -91,7 +91,8 @@ export function CalendarPage(): React.JSX.Element {
     }
   }
 
-  // Dragging a class moves that weekly slot (every week); dragging an event moves just that event.
+  // Dragging a class moves that weekly slot (every week); dragging a one-off event moves just that
+  // event; dragging a repeating event changes its time on every repeat (the day stays as it is).
   const move = (occ: Occurrence, dayIndex: number, slot: Slot): void => {
     const day = days[dayIndex]
     if (occ.kind === 'class') {
@@ -99,7 +100,7 @@ export function CalendarPage(): React.JSX.Element {
       if (session) updateSession(occ.refId, { ...session, weekday: day.getDay(), ...slot })
     } else {
       const event = data.events.find((e) => e.id === occ.refId)
-      if (event) saveEvent({ ...event, date: toISODate(day), ...slot })
+      if (event) saveEvent({ ...event, ...(event.repeat ? {} : { date: toISODate(day) }), ...slot })
     }
   }
 
@@ -174,7 +175,12 @@ export function CalendarPage(): React.JSX.Element {
         />
       )}
       {editing?.kind === 'event' && (
-        <EventDialog initial={editing.item} isNew={editing.isNew} onClose={() => setEditing(null)} />
+        <EventDialog
+          initial={editing.item}
+          isNew={editing.isNew}
+          weekStartsOn={settings.weekStartsOn}
+          onClose={() => setEditing(null)}
+        />
       )}
     </div>
   )

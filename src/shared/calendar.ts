@@ -1,3 +1,4 @@
+import { occursOn } from './recurrence'
 import { toISODate } from './time'
 import type { CalendarData, Settings } from './types'
 
@@ -46,6 +47,8 @@ export interface Occurrence {
   date: string
   start: number
   end: number
+  /** True for an event that repeats; dragging it changes the time of every repeat. */
+  repeats: boolean
 }
 
 export function occurrencesForWeek(data: CalendarData, days: Date[]): Occurrence[] {
@@ -65,14 +68,15 @@ export function occurrencesForWeek(data: CalendarData, days: Date[]): Occurrence
           color: c.color,
           date,
           start: s.start,
-          end: s.end
+          end: s.end,
+          repeats: false
         })
       }
     }
     for (const e of data.events) {
-      if (e.date !== date) continue
+      if (!occursOn(e, date)) continue
       out.push({
-        key: `e:${e.id}`,
+        key: `e:${e.id}:${date}`,
         kind: 'event',
         refId: e.id,
         sessionId: null,
@@ -81,7 +85,8 @@ export function occurrencesForWeek(data: CalendarData, days: Date[]): Occurrence
         color: e.color,
         date,
         start: e.start,
-        end: e.end
+        end: e.end,
+        repeats: e.repeat !== undefined
       })
     }
   }

@@ -216,8 +216,9 @@
   line-height: 1.3;
   box-shadow: 0 0 0 1.5px var(--paper-raised);
 }
-/* One-off events (exams, deadlines) are hatched so they read differently from weekly classes. */
-.cal-block[data-kind='event'] {
+/* One-off events (exams, deadlines) are hatched so they read differently from weekly classes;
+   repeating events (a daily routine) stay plain. */
+.cal-block[data-kind='event']:not([data-repeats]) {
   background-image: repeating-linear-gradient(
     -45deg,
     rgba(255, 255, 255, 0.32) 0 5px,
@@ -394,4 +395,46 @@
   height: 10px;
   border-radius: 50%;
   background: var(--now-line);
+}
+
+/* ---------- Repeat field in the event dialog ---------- */
+
+.repeat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-md);
+  background: var(--paper-sunk);
+}
+.repeat-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.repeat-interval {
+  width: 64px;
+}
+.repeat-days {
+  display: flex;
+  gap: 4px;
+}
+.repeat-day {
+  height: 28px;
+  padding: 0 9px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper-raised);
+  color: var(--ink-soft);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+.repeat-day[aria-pressed='true'] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
 }

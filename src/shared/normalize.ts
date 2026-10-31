@@ -6,6 +6,7 @@ import {
   DEFAULT_SETTINGS,
   type CalendarData,
   type CalendarEvent,
+  type Repeat,
   type ClassItem,
   type ClassSession,
   type Note,
@@ -80,10 +81,23 @@ function normalizeClass(raw: unknown): ClassItem | null {
   }
 }
 
+function normalizeRepeat(raw: unknown): Repeat | undefined {
+  if (!isObj(raw) || (raw.every !== 'day' && raw.every !== 'week')) return undefined
+  const interval = typeof raw.interval === 'number' && Number.isInteger(raw.interval) && raw.interval >= 1 ? raw.interval : 1
+  const weekdays =
+    raw.every === 'week'
+      ? [...new Set(list(raw.weekdays).filter((d): d is number => typeof d === 'number' && Number.isInteger(d) && d >= 0 && d <= 6))].sort(
+          (a, b) => a - b
+        )
+      : []
+  return { every: raw.every, interval, weekdays, until: isDate(raw.until) ? raw.until : null }
+}
+
 function normalizeEvent(raw: unknown): CalendarEvent | null {
   if (!isObj(raw)) return null
   const { date, start, end } = raw
   if (!isDate(date) || !isMinute(start) || !isMinute(end) || end <= start) return null
+  const repeat = normalizeRepeat(raw.repeat)
   return {
     id: id(raw.id) ?? newId(),
     title: str(raw.title),
@@ -91,7 +105,8 @@ function normalizeEvent(raw: unknown): CalendarEvent | null {
     start,
     end,
     color: isColor(raw.color) ? raw.color : DEFAULT_COLOR,
-    location: str(raw.location)
+    location: str(raw.location),
+    ...(repeat ? { repeat } : {})
   }
 }
 

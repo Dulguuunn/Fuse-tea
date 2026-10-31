@@ -37,6 +37,7 @@ export function CalendarBlock({
     <div
       className="cal-block"
       data-kind={item.kind}
+      data-repeats={item.repeats || undefined}
       data-size={height < 34 ? 'xs' : height < 54 ? 'sm' : undefined}
       data-dragging={dragging || undefined}
       data-ghost={ghost || undefined}

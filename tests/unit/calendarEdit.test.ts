@@ -36,8 +36,8 @@ describe('validateSlot', () => {
     expect(validateSlot(600, 600)).toMatch(/after/i)
     expect(validateSlot(700, 600)).toMatch(/after/i)
   })
-  it('rejects slots shorter than 15 minutes', () => {
-    expect(validateSlot(600, 610)).toMatch(/15 minutes/)
+  it('rejects slots shorter than 5 minutes', () => {
+    expect(validateSlot(600, 603)).toMatch(/5 minutes/)
   })
 })
 

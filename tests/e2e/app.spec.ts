@@ -231,3 +231,23 @@ test('the lock code can be changed and then turned off in Settings', async () =>
   await win3.locator('.app').waitFor() // lock is off: straight in
   await third.close()
 })
+
+test('an event that repeats every day shows on every day of the following week', async () => {
+  const { app, win } = await launch(freshDataDir())
+  await win.getByRole('button', { name: 'Calendar', exact: true }).click()
+  await win.getByRole('button', { name: 'New event' }).click()
+  await win.getByPlaceholder('e.g. Calculus midterm').fill('Stretch')
+  await win.getByLabel('Repeats', { exact: true }).selectOption('day')
+  await win.getByRole('button', { name: 'Save event' }).click()
+  await win.getByRole('button', { name: 'Next week' }).click()
+  const columns = win.locator('.day-col')
+  await expect(columns).toHaveCount(7)
+  for (let i = 0; i < 7; i++) await expect(columns.nth(i).locator('.cal-block')).toContainText('Stretch')
+  await win.screenshot({ path: 'test-results/e2e/repeat.png' })
+  // Editing the series changes every day.
+  await columns.nth(2).locator('.cal-block').click()
+  await win.getByPlaceholder('e.g. Calculus midterm').fill('Stretch more')
+  await win.getByRole('button', { name: 'Save event' }).click()
+  for (let i = 0; i < 7; i++) await expect(columns.nth(i).locator('.cal-block')).toContainText('Stretch more')
+  await app.close()
+})
