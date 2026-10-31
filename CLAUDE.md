@@ -31,7 +31,7 @@ The app is packaged as `release/win-unpacked/Ponder.exe` (the old `Notes.exe` bu
 | `npm test` | Unit tests (Vitest, `tests/unit`) |
 | `npm run typecheck` | TypeScript check for main/preload and renderer |
 | `npm run e2e` | Build + Playwright end-to-end tests (`tests/e2e`, temp data dir) |
-| `npm run package` | Build `release/win-unpacked/Notes.exe` |
+| `npm run package` | Build `release/win-unpacked/Ponder.exe` |
 | `npm run shortcut` | Create the Desktop shortcut to the exe |
 | `npx electron scripts/make-icon.mjs` | Rebuild `build/icon.png` + `icon.ico` from `build/icon-source.jpg` |
 | `node scripts/seed-demo-data.mjs <dir>` | Fill a folder with demo notes/tasks/classes (for screenshots) |
@@ -142,7 +142,7 @@ Features:
 - TipTap 3 task items render as `ul[data-type="taskList"] > li[data-checked]` (no data-type on the li).
 - E2E/flow scripts must wait for the UI (e.g. `.note-row`) before pressing keys: the app renders only
   after all stores load.
-- Packaging: `npm run package` → `release/win-unpacked/Notes.exe` (electron-builder `dir` target, no
+- Packaging: `npm run package` → `release/win-unpacked/Ponder.exe` (electron-builder `dir` target, no
   installer, icon embedded fine — no winCodeSign/symlink problem on this PC). The exe must be closed
   before rebuilding (Windows locks it); `Build App.bat` checks this.
 - `.bat` files must keep CRLF line endings (enforced in .gitattributes).
