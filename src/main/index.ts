@@ -43,7 +43,7 @@ function createWindow(backgroundColor: string): BrowserWindow {
     minWidth: 900,
     minHeight: 600,
     show: false,
-    title: 'Notes',
+    title: 'Ponder',
     icon: app.isPackaged ? join(process.resourcesPath, 'icon.ico') : join(app.getAppPath(), 'build', 'icon.ico'),
     backgroundColor,
     webPreferences: {

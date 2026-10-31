@@ -125,7 +125,7 @@ export function SettingsPage(): React.JSX.Element {
             </Row>
           </section>
 
-          <p className="settings-footer muted">Notes {version}</p>
+          <p className="settings-footer muted">Ponder {version}</p>
         </div>
       </div>
     </>

@@ -1,7 +1,7 @@
-# Builds release/win-unpacked/Notes.exe (no installer: the app stays in this folder and keeps
+# Builds release/win-unpacked/Ponder.exe (no installer: the app stays in this folder and keeps
 # its data in ../../data, i.e. C:\Note\data). Run with: npm run package
-appId: com.dulguun.notes
-productName: Notes
+appId: com.dulguun.ponder
+productName: Ponder
 copyright: Personal use
 directories:
   output: release

@@ -1,11 +1,11 @@
 @echo off
-rem Rebuilds release\win-unpacked\Notes.exe from the source code. Close the Notes app first.
+rem Rebuilds release\win-unpacked\Ponder.exe from the source code. Close Ponder first.
 rem Your notes in the data folder are never touched by this.
 cd /d "%~dp0"
 
-tasklist /FI "IMAGENAME eq Notes.exe" 2>nul | find /I "Notes.exe" >nul
+tasklist /FI "IMAGENAME eq Ponder.exe" 2>nul | find /I "Ponder.exe" >nul
 if not errorlevel 1 (
-  echo Notes is still open. Close it first, then run this again.
+  echo Ponder is still open. Close it first, then run this again.
   echo.
   pause
   exit /b 1
@@ -17,12 +17,12 @@ if not exist node_modules (
   if errorlevel 1 goto :fail
 )
 
-echo Building Notes...
+echo Building Ponder...
 call npm run package
 if errorlevel 1 goto :fail
 
 echo.
-echo Done! The app is at release\win-unpacked\Notes.exe
+echo Done! The app is at release\win-unpacked\Ponder.exe
 echo If you do not have a Desktop shortcut yet, double-click "Create Desktop Shortcut.bat".
 echo.
 pause

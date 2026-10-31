@@ -1,6 +1,6 @@
 {
   "name": "notes",
-  "productName": "Notes",
+  "productName": "Ponder",
   "version": "1.0.0",
   "description": "Personal notes, to-dos and class calendar",
   "main": "out/main/index.js",
