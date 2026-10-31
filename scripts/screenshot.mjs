@@ -1,7 +1,7 @@
 // Dev helper: launches the BUILT app (run `npm run build` first) and saves a screenshot.
 // Usage: node scripts/screenshot.mjs [out.png] [--data <dir>] [--page Notes|To-dos|Calendar|Settings] [--theme light|dark]
 // Without --data it uses a fresh temp folder, so your real notes are never touched.
-import { mkdtempSync } from 'node:fs'
+import { existsSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { _electron as electron } from '@playwright/test'
@@ -15,6 +15,9 @@ const out = args.find((a) => a.endsWith('.png')) ?? 'test-results/screenshot.png
 const dataDir = opt('--data') ?? mkdtempSync(join(tmpdir(), 'notes-shot-'))
 const page = opt('--page')
 const theme = opt('--theme')
+
+// Skip the launch lock in the screenshot data folder (no lock.json would mean the default lock).
+if (!existsSync(join(dataDir, 'lock.json'))) writeFileSync(join(dataDir, 'lock.json'), '{"enabled":false}')
 
 const app = await electron.launch({ args: ['.'], env: { ...process.env, NOTES_DATA_DIR: dataDir } })
 const win = await app.firstWindow()

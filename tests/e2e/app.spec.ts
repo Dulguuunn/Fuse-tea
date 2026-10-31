@@ -1,4 +1,4 @@
-import { mkdtempSync } from 'node:fs'
+import { mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { _electron as electron, expect, test, type ElectronApplication, type Page } from '@playwright/test'
@@ -11,7 +11,12 @@ async function launch(dataDir: string): Promise<{ app: ElectronApplication; win:
   return { app, win }
 }
 
-const freshDataDir = (): string => mkdtempSync(join(tmpdir(), 'notes-e2e-'))
+/** A new temp data folder with the launch lock off (no lock.json would mean the default lock, code 8848). */
+const freshDataDir = (): string => {
+  const dir = mkdtempSync(join(tmpdir(), 'notes-e2e-'))
+  writeFileSync(join(dir, 'lock.json'), '{"enabled":false}')
+  return dir
+}
 
 test('a note typed right before closing the window is still there after reopening', async () => {
   const dir = freshDataDir()
@@ -162,4 +167,67 @@ test('a class from 09:00 to 10:30 on Monday appears on the calendar', async () =
   await expect(monday.locator('.cal-block')).toContainText('09:00 – 10:30')
   await win.screenshot({ path: 'test-results/e2e/calendar.png' })
   await app.close()
+})
+
+test('the lock screen asks for the code on launch: a wrong code is refused, 8848 opens the app', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'notes-e2e-lock-')) // no lock.json: default lock, code 8848
+  const app = await electron.launch({ args: ['.'], env: { ...process.env, NOTES_DATA_DIR: dir } })
+  const win = await app.firstWindow()
+  await win.setViewportSize({ width: 1280, height: 800 })
+  await expect(win.locator('.app')).toHaveCount(0)
+  await win.getByLabel('Code').fill('1234')
+  await win.getByRole('button', { name: 'Unlock' }).click()
+  await expect(win.getByRole('alert')).toContainText('not right')
+  await expect(win.locator('.app')).toHaveCount(0)
+  await win.screenshot({ path: 'test-results/e2e/lock.png' })
+  await win.getByLabel('Code').fill('8848')
+  await win.keyboard.press('Enter')
+  await win.locator('.app').waitFor()
+  // Data requests are refused by the main process until unlocked (checked on a second launch below).
+  await app.close()
+
+  const again = await electron.launch({ args: ['.'], env: { ...process.env, NOTES_DATA_DIR: dir } })
+  const win2 = await again.firstWindow()
+  await win2.getByLabel('Code').waitFor()
+  const blocked = await win2.evaluate<string>(
+    "window.api.notes.list().then(() => 'allowed', (e) => e.message)"
+  )
+  expect(blocked).toContain('Locked')
+  await again.close()
+})
+
+test('the lock code can be changed and then turned off in Settings', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'notes-e2e-lock-'))
+  const app = await electron.launch({ args: ['.'], env: { ...process.env, NOTES_DATA_DIR: dir } })
+  const win = await app.firstWindow()
+  await win.getByLabel('Code').fill('8848')
+  await win.keyboard.press('Enter')
+  await win.locator('.app').waitFor()
+  await win.getByRole('button', { name: 'Settings', exact: true }).click()
+  await win.getByRole('button', { name: 'Change code' }).click()
+  await win.getByLabel('Current code').fill('8848')
+  await win.getByLabel('New code (4 to 8 digits)').fill('2468')
+  await win.getByRole('button', { name: 'Save' }).click()
+  await expect(win.getByRole('dialog')).toHaveCount(0) // the new code is saved once the dialog closes
+  await app.close()
+
+  const again = await electron.launch({ args: ['.'], env: { ...process.env, NOTES_DATA_DIR: dir } })
+  const win2 = await again.firstWindow()
+  await win2.getByLabel('Code').fill('8848')
+  await win2.keyboard.press('Enter')
+  await expect(win2.getByRole('alert')).toContainText('not right')
+  await win2.getByLabel('Code').fill('2468')
+  await win2.keyboard.press('Enter')
+  await win2.locator('.app').waitFor()
+  await win2.getByRole('button', { name: 'Settings', exact: true }).click()
+  await win2.getByRole('button', { name: 'Turn off', exact: true }).click()
+  await win2.getByLabel('Current code').fill('2468')
+  await win2.getByRole('button', { name: 'Turn off lock' }).click()
+  await expect(win2.getByRole('button', { name: 'Turn on', exact: true })).toBeVisible()
+  await again.close()
+
+  const third = await electron.launch({ args: ['.'], env: { ...process.env, NOTES_DATA_DIR: dir } })
+  const win3 = await third.firstWindow()
+  await win3.locator('.app').waitFor() // lock is off: straight in
+  await third.close()
 })

@@ -6,6 +6,11 @@ import { IPC, type NotesApi } from '@shared/ipc'
 const invoke = <T>(channel: string, ...args: unknown[]): Promise<T> => ipcRenderer.invoke(channel, ...args)
 
 const api: NotesApi = {
+  lock: {
+    status: () => invoke(IPC.lockStatus),
+    unlock: (code) => invoke(IPC.lockUnlock, code),
+    change: (current, next) => invoke(IPC.lockChange, current, next)
+  },
   notes: {
     list: () => invoke(IPC.notesList),
     save: (note) => invoke(IPC.notesSave, note),

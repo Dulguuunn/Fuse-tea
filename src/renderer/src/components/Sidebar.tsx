@@ -51,7 +51,7 @@ export function Sidebar({ children }: { children?: ReactNode }): React.JSX.Eleme
   return (
     <aside className="sidebar" data-collapsed={collapsed || undefined}>
       <div className="sidebar-head">
-        <div className="wordmark">notes</div>
+        <div className="wordmark">ponder</div>
         <button
           type="button"
           className="icon-btn"

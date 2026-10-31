@@ -8,6 +8,7 @@ import { ATTACHMENT_SCHEME, resolveAttachmentPath } from './attachments'
 import { runDailyBackup } from './backup'
 import { resolveDataDir } from './dataDir'
 import { registerIpc } from './ipc'
+import { Lock } from './lock'
 import { Storage } from './storage'
 
 const CLOSE_FLUSH_TIMEOUT_MS = 3000
@@ -126,7 +127,9 @@ if (!app.requestSingleInstanceLock()) {
 
   void app.whenReady().then(async () => {
     const storage = new Storage(dataDir)
-    registerIpc(storage)
+    const lock = new Lock(storage)
+    await lock.init()
+    registerIpc(storage, lock)
     serveAttachments()
     const { theme } = await storage.readJson('settings.json', normalizeSettings)
     const dark = theme === 'dark' || (theme === 'system' && nativeTheme.shouldUseDarkColors)

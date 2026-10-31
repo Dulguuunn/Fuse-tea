@@ -19,10 +19,30 @@ export const IPC = {
   version: 'app:version',
   openDataFolder: 'app:open-data-folder',
   beforeClose: 'app:before-close',
-  readyToClose: 'app:ready-to-close'
+  readyToClose: 'app:ready-to-close',
+  lockStatus: 'lock:status',
+  lockUnlock: 'lock:unlock',
+  lockChange: 'lock:change'
 } as const
 
+export interface LockStatus {
+  enabled: boolean
+  /** True when the lock is off, or the right code was entered since launch. */
+  unlocked: boolean
+}
+
+export type LockResult =
+  | { ok: true }
+  | { ok: false; reason: 'wrong' | 'invalid' }
+  | { ok: false; reason: 'wait'; waitMs: number }
+
 export interface NotesApi {
+  lock: {
+    status(): Promise<LockStatus>
+    unlock(code: string): Promise<LockResult>
+    /** New code (4-8 digits), or null to turn the lock off. `current` is ignored while the lock is off. */
+    change(current: string, next: string | null): Promise<LockResult>
+  }
   notes: {
     list(): Promise<Note[]>
     save(note: Note): Promise<void>

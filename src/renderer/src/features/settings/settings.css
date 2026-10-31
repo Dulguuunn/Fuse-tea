@@ -91,3 +91,16 @@
 .settings-footer {
   font-size: var(--text-xs);
 }
+
+.lock-actions {
+  display: flex;
+  gap: 8px;
+}
+.lock-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.lock-form .input {
+  width: 100%;
+}

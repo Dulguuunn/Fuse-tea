@@ -6,6 +6,7 @@ import './styles/tokens.css'
 import './styles/base.css'
 import './styles/sidebar.css'
 import App from './App'
+import { LockScreen } from './components/LockScreen'
 import { useCalendar } from './state/calendarStore'
 import { saver } from './state/saver'
 import { useNotes } from './state/notesStore'
@@ -28,13 +29,21 @@ async function loadAll(): Promise<void> {
   )
 }
 
-async function start(): Promise<void> {
-  await loadAll()
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <App />
-    </StrictMode>
+function renderApp(root: ReturnType<typeof createRoot>): void {
+  void loadAll().then(() =>
+    root.render(
+      <StrictMode>
+        <App />
+      </StrictMode>
+    )
   )
+}
+
+async function start(): Promise<void> {
+  const root = createRoot(document.getElementById('root')!)
+  const lock = await window.api.lock.status()
+  if (lock.unlocked) renderApp(root)
+  else root.render(<LockScreen onUnlocked={() => renderApp(root)} />)
 }
 
 void start()

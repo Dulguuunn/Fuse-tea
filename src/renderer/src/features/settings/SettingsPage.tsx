@@ -4,6 +4,7 @@ import { formatTime } from '@shared/time'
 import type { Theme, TimeFormat } from '@shared/types'
 import { Segmented } from '../../components/Segmented'
 import { useSettings } from '../../state/settingsStore'
+import { LockSettings } from './LockSettings'
 import './settings.css'
 
 function Row({ title, hint, children }: { title: string; hint?: string; children: ReactNode }): React.JSX.Element {
@@ -107,6 +108,16 @@ export function SettingsPage(): React.JSX.Element {
                   ))}
                 </select>
               </div>
+            </Row>
+          </section>
+
+          <section>
+            <h2>Privacy</h2>
+            <Row
+              title="Lock code"
+              hint="Ponder asks for this code every time it opens. It keeps other people out of the app; it does not encrypt the files in your data folder."
+            >
+              <LockSettings />
             </Row>
           </section>
 
