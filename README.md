@@ -1,4 +1,4 @@
-# Notes
+# Ponder
 
 Your own free notes app for Windows: **rich-text notes**, **to-dos**, and a **weekly class calendar**,
 all in one window. No account, no internet, no premium wall: everything is saved as plain files in
@@ -8,12 +8,13 @@ all in one window. No account, no internet, no premium wall: everything is saved
 
 ## 1. Opening the app
 
-Double-click **Notes** on your Desktop, or press the Windows key and type **Notes**.
+Double-click **Ponder** on your Desktop, or press the Windows key and type **Ponder**.
+The first screen asks for your **lock code** (it starts as `8848`; change it in Settings).
 
 The shortcut points to the program inside this folder:
 
 ```
-Desktop\Notes  ──opens──▶  C:\Note\release\win-unpacked\Notes.exe  ──saves to──▶  C:\Note\data\
+Desktop\Ponder  ──opens──▶  C:\Note\release\win-unpacked\Ponder.exe  ──saves to──▶  C:\Note\data\
 ```
 
 **Does it work like that, with the folder staying in C:\Note?** Yes. The `.exe` lives inside
@@ -34,7 +35,7 @@ shortcut keeps working.
 
 The left sidebar switches between **Notes**, **To-dos**, **Calendar** and **Settings**.
 
-- **Need more room?** Click the panel button next to **notes** at the top of the sidebar, or press
+- **Need more room?** Click the panel button next to **ponder** at the top of the sidebar, or press
   **Ctrl+\\**. The sidebar shrinks to a thin strip of icons; hover an icon to see its name. Notebooks are
   hidden while it's shrunk. Click the button or press **Ctrl+\\** again to bring it back. The app
   remembers your choice.
@@ -101,6 +102,10 @@ The left sidebar switches between **Notes**, **To-dos**, **Calendar** and **Sett
   striped so you can tell them apart from weekly classes.
 - **‹ Today ›** moves between weeks. The red line shows the current time, and today's date has a
   yellow highlight.
+- **Repeating events** (a daily routine, a weekly chore): in **New event**, open **Repeats** and pick
+  every day, every few days, or every week on the days you choose, with an optional **Until** date.
+  Editing or deleting a repeating event changes **every** repeat, and dragging one changes its time on
+  every repeat (the day stays). Repeating events are plain; one-off events stay striped.
 - Classes repeat every week. When the semester ends, open a class and choose **Delete class**.
 
 ### Settings
@@ -108,8 +113,11 @@ The left sidebar switches between **Notes**, **To-dos**, **Calendar** and **Sett
 - **Theme:** System (follows Windows), Light, or Dark. Dark is pure black with white accents.
 - **Time format:** 24-hour or 12-hour.
 - **Week starts on:** Monday or Sunday.
-- **Hours shown on the calendar:** 07:00–22:00 by default. A class outside these hours still shows,
-  because the grid stretches to fit it.
+- **Hours shown on the calendar:** 07:00–22:00 by default. A class or event outside these hours still
+  shows, because the grid stretches to fit it (a late-night routine makes the grid start at 00:00).
+- **Lock code:** Ponder asks for it every time it opens. It starts as `8848`. **Change code** and
+  **Turn off** both ask for the current code, and 5 wrong tries make you wait 30 seconds. The code
+  keeps other people out of the app; it does **not** encrypt the files in `C:\Note\data`.
 - **Open data folder:** opens `C:\Note\data` in File Explorer.
 
 ---
@@ -131,9 +139,9 @@ data\
 
 - **Automatic backups:** each day the app copies the data folder into `data\backups\<date>`.
 - **Restoring from a backup:**
-  1. Close Notes.
+  1. Close Ponder.
   2. Copy the files from a backup folder back into `data\`, replacing the current ones.
-  3. Open Notes again.
+  3. Open Ponder again.
 - **Extra safety:** now and then, copy the whole `data` folder to a USB stick or to OneDrive.
 - **Moving to a new PC:**
   1. Copy the entire `C:\Note` folder to the new PC.
@@ -149,9 +157,9 @@ data\
 
 You only need this the first time, or after the code changes.
 
-1. **Close Notes** if it's open. Windows locks a running program, so it can't be replaced.
+1. **Close Ponder** if it's open. Windows locks a running program, so it can't be replaced.
 2. Double-click **`Build App.bat`**. It runs `npm install` the first time, then builds
-   `release\win-unpacked\Notes.exe`. It takes about a minute.
+   `release\win-unpacked\Ponder.exe`. It takes about a minute.
 3. If you don't have the Desktop shortcut yet, double-click **`Create Desktop Shortcut.bat`**.
 
 This needs **Node.js** (installed on this PC). Commands for a developer terminal in `C:\Note`:
@@ -162,7 +170,7 @@ This needs **Node.js** (installed on this PC). Commands for a developer terminal
 | `npm test` | Unit tests (time math, calendar layout, storage, backups…) |
 | `npm run typecheck` | Check the TypeScript code for type errors |
 | `npm run e2e` | Build, then click through the real app automatically, using a throwaway data folder |
-| `npm run package` | Build `release\win-unpacked\Notes.exe` (same as `Build App.bat`) |
+| `npm run package` | Build `release\win-unpacked\Ponder.exe` (same as `Build App.bat`) |
 | `npm run shortcut` | Create the Desktop and Start-menu shortcuts (same as the `.bat`) |
 
 ### Changing the app icon, its name, or the sidebar icons
@@ -170,15 +178,16 @@ This needs **Node.js** (installed on this PC). Commands for a developer terminal
 After any of these, rebuild (**`Build App.bat`**), then run **`Create Desktop Shortcut.bat`** again so
 the shortcut picks up the change.
 
-- **App icon** (the picture on the exe, the Desktop shortcut, the taskbar and the window): replace
-  `build\icon.ico` (and `build\icon.png`) with your own. The `.ico` should include a 256×256 size; a
-  free online "PNG to ICO" converter can make one from any square picture. Don't run
-  `scripts\make-icon.mjs` afterwards: it redraws the original icon over yours. Windows sometimes keeps
-  showing the old icon for a while; restarting File Explorer or the PC clears its cache.
-- **App name** ("Notes"): it's set in `productName` in both `package.json` and `electron-builder.yml`
+- **App icon** (the picture on the exe, the Desktop shortcut, the taskbar and the window): it is cut
+  from the photo `build\icon-source.jpg`. To use another picture, replace that file and run
+  `npx electron scripts/make-icon.mjs`: it crops a square and writes `build\icon.png` and
+  `build\icon.ico`. Windows sometimes keeps showing the old icon for a while; restarting File Explorer
+  or the PC clears its cache.
+- **App name** ("Ponder"): it's set in `productName` in both `package.json` and `electron-builder.yml`
   (this decides the exe's file name), the window title in `src\main\index.ts` and
-  `src\renderer\index.html`, and the exe and shortcut names in `Build App.bat` and
-  `scripts\create-desktop-shortcut.ps1`. Change them all together; the easiest way is to ask Claude.
+  `src\renderer\index.html`, the sidebar wordmark in `src\renderer\src\components\Sidebar.tsx`, and the
+  exe and shortcut names in `Build App.bat` and `scripts\create-desktop-shortcut.ps1`. Change them all
+  together; the easiest way is to ask Claude.
 - **Sidebar icons** (next to Notes, To-dos, Calendar, Settings): they come from the free
   [Lucide](https://lucide.dev/icons) icon set and are listed in `src\renderer\src\components\Sidebar.tsx`
   (`NotebookPen`, `ListChecks`, `CalendarDays`, `Settings`). To change one, find an icon on lucide.dev,
@@ -216,7 +225,7 @@ editors and modern UIs are easiest to build with web technology.
 ### What it does inside *this* app
 
 ```
-┌──────────────────────────── Notes.exe (Electron) ────────────────────────────┐
+┌──────────────────────────── Ponder.exe (Electron) ────────────────────────────┐
 │                                                                               │
 │  MAIN PROCESS (Node.js)            PRELOAD (the bridge)     WINDOW (Chromium) │
 │  src/main/                         src/preload/            src/renderer/      │
@@ -242,7 +251,7 @@ What Electron contributes here:
    note" or "give me my tasks". This is Electron's recommended security model (`contextIsolation`
    and `sandbox`).
 4. **Packaging into an `.exe`.** The tool *electron-builder* bundles Chromium, Node.js and this
-   app's code into `release\win-unpacked\Notes.exe`, a program you can double-click without
+   app's code into `release\win-unpacked\Ponder.exe`, a program you can double-click without
    installing anything else.
 5. **Desktop extras.** Saving before the window closes, opening links in your normal browser, the
    "Open data folder" button, and blocking a second copy of the app from running and fighting over
@@ -264,10 +273,10 @@ What Electron contributes here:
 C:\Note\
 ├─ README.md                  ← this file
 ├─ CLAUDE.md                  ← progress notes for Claude, the AI that wrote this app
-├─ Build App.bat              ← double-click to (re)build Notes.exe
+├─ Build App.bat              ← double-click to (re)build Ponder.exe
 ├─ Create Desktop Shortcut.bat
 ├─ data\                      ← YOUR notes (not part of the code, never in git)
-├─ release\win-unpacked\      ← the built app (Notes.exe lives here)
+├─ release\win-unpacked\      ← the built app (Ponder.exe lives here)
 ├─ src\
 │  ├─ shared\    pure logic used everywhere: data types, time math, calendar layout,
 │  │             to-do grouping, note search, file validation
@@ -277,7 +286,7 @@ C:\Note\
 │     └─ src\features\  notes\, todos\, calendar\, settings\
 ├─ tests\unit\   automated tests for the logic (npm test)
 ├─ tests\e2e\    automated click-through tests of the real app (npm run e2e)
-├─ scripts\      icon generator, shortcut script, screenshot and demo-data helpers
+├─ scripts\      icon builder, routine setup, shortcut script, screenshot and demo-data helpers
 ├─ build\        app icon
 └─ docs\superpowers\  the design spec and the step-by-step build plan
 ```
@@ -302,8 +311,8 @@ C:\Note\
 
 | Problem | Fix |
 |---|---|
-| The Desktop shortcut does nothing or is missing | Run `Create Desktop Shortcut.bat`. If it says Notes.exe wasn't found, run `Build App.bat` first. |
-| `Build App.bat` says Notes is still open | Close the Notes window (check the taskbar), then run it again. |
+| The Desktop shortcut does nothing or is missing | Run `Create Desktop Shortcut.bat`. If it says Ponder.exe wasn't found, run `Build App.bat` first. |
+| `Build App.bat` says Ponder is still open | Close the Ponder window (check the taskbar), then run it again. |
 | A note shows "Couldn't save" | Make sure `C:\Note\data` still exists and isn't read-only. Your next edit retries automatically. |
 | Something looks wrong after an update | Close the app and run `Build App.bat` again. Your data isn't affected. |
 | Lost something | Look in **Trash** first, then in `data\backups\`. |
