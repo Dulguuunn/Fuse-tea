@@ -6,3 +6,8 @@ test-results/
 playwright-report/
 .superpowers/
 *.log
+
+# Personal: a daily-routine loader (schedule details). Kept on this PC only, never committed.
+src/shared/routine.ts
+scripts/setup-routine.mjs
+tests/unit/routine.test.ts

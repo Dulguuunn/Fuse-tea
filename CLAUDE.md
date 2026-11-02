@@ -3,11 +3,11 @@
 Personal, offline Windows desktop app replacing UpNote: rich-text notes, to-dos, and a weekly class
 calendar. Built for one user (a student) on one PC. Electron + React + TypeScript.
 
-## Status (2026-11-01)
+## Status (2026-11-02)
 
-**Version 1.3 is complete** — v1.2 plus tasks 22–27 (see Progress): app renamed **Ponder**, icon from
-the user's cloud photo, launch lock (code 8848), repeating calendar events, and the user's daily routine
-loaded as data. The user-facing guide is `README.md` (keep it in sync when behavior changes).
+**Version 1.4 is built** (tasks 28–34: the Applications section; the exe needs `npm run package` to include it). Version 1.3 was v1.2 plus tasks 22–27 (see Progress): app renamed **Ponder**, icon from
+the user's cloud photo, launch lock (code 8848), repeating calendar events, and a personal daily routine
+loaded as data (kept out of git). The user-facing guide is `README.md` (keep it in sync when behavior changes).
 The app is packaged as `release/win-unpacked/Ponder.exe` (the old `Notes.exe` build is replaced on rebuild).
 
 ## Start here (every new session)
@@ -33,6 +33,7 @@ The app is packaged as `release/win-unpacked/Ponder.exe` (the old `Notes.exe` bu
 | `npm run e2e` | Build + Playwright end-to-end tests (`tests/e2e`, temp data dir) |
 | `npm run package` | Build `release/win-unpacked/Ponder.exe` |
 | `npm run shortcut` | Create the Desktop shortcut to the exe |
+| `node scripts/setup-routine.mjs <dataDir>` | **Local only (git-ignored):** loads the user's personal daily routine. The script, `src/shared/routine.ts` and its test hold schedule details, so they are not in the repo. Close Ponder before running it on the real data folder |
 | `npx electron scripts/make-icon.mjs` | Rebuild `build/icon.png` + `icon.ico` from `build/icon-source.jpg` |
 | `node scripts/seed-demo-data.mjs <dir>` | Fill a folder with demo notes/tasks/classes (for screenshots) |
 | `node scripts/screenshot.mjs out.png [--page Calendar] [--theme dark] [--data dir]` | Launch the built app against a temp data dir and save a screenshot (for visual checks) |
@@ -96,8 +97,13 @@ Data dir resolution: `NOTES_DATA_DIR` env → packaged `<exe dir>\..\..\data` �
 - [x] Task 23: Icon from the photo (`scripts/make-icon.mjs` uses Electron `nativeImage`)
 - [x] Task 24: Launch lock, default code 8848 (`src/main/lock.ts`, `LockScreen`, Settings → Privacy)
 - [x] Task 25: Repeating events (`src/shared/recurrence.ts`, `CalendarEvent.repeat`, `RepeatField`)
-- [x] Task 26: Daily routine data (`src/shared/routine.ts`, `scripts/setup-routine.mjs`)
+- [x] Task 26: Daily routine data (local only, git-ignored: `src/shared/routine.ts`, `scripts/setup-routine.mjs`)
 - [x] Task 27: Rebuild exe, routine loaded into the real data (2026-11-01), final docs
+- [x] Task 28: Applications data layer (`shared/profile|applications|files|appLinks|bundle|jsonResume|seed|text.ts`)
+- [x] Task 29: Main IPC (`main/applicationsIpc.ts`), `attachment://stored/` protocol, renderer stores
+- [x] Task 30–32: Applications page: Profile, Files, Applications tabs (`features/applications/`)
+- [x] Task 33: Export/import UI, e2e tests (`tests/e2e/applications.spec.ts`), screenshots (`scripts/shots-applications.mjs`)
+- [x] Task 34: README + CLAUDE.md. **Not yet done: `npm run package`, and the real data has not been opened with the new version.**
 
 ## Next ideas (not built — ask the user before starting any)
 
@@ -126,11 +132,29 @@ Features:
 - **Repeating events:** `CalendarEvent.repeat` (`every` day/week, `interval`, `weekdays`, `until`); the event's
   `date` is the first day. Weeks count Monday–Sunday. No per-occurrence edits or skipped dates: split a
   series instead (the routine does this for the Friday class). Occurrence keys are `e:<id>:<date>`.
-  Minimum event length is now 5 minutes (was 15). The grid widens to fit late-night events.
+- Minimum event length is 5 minutes. The calendar grid widens to fit late-night events.
 - Electron ESM main scripts must not `await app.whenReady()` at top level (deadlock): use `.then()`.
-- Node 24 runs `.ts` directly, so `scripts/setup-routine.mjs` imports `src/shared/routine.ts` (that file may only
+- Node 24 runs `.ts` directly, so the local `scripts/setup-routine.mjs` imports `src/shared/routine.ts` (that file may only
   use `import type`, no aliases or enums).
 - `npx playwright test` uses the existing `out/` build: run `npm run build` first (or use `npm run e2e`).
+
+- **Applications section** (design: `docs/superpowers/specs/2026-11-02-applications-design.md`):
+  - Data: `profile.json`, `applications.json`, `files.json`, bytes in `files/<id>.<ext>`. The *referencing* side holds
+    `fileIds` (profile entries, applications); "linked to" is derived (`linksForFile`). `usedIn` of answers is derived too.
+  - First-run seed (`main/applicationsIpc.ts` `seedOnFirstRun`) runs only when `profile.json` does not exist; the
+    `seeded` flag lives in it. **Personal details are never in the repo:** the user's starting data is an export file at
+    `data/seed.json` (git-ignored; `startingData()` in `shared/seed.ts` reads it, else the generic seed: empty profile + folders).
+    Tests, e2e and screenshots copy the made-up `tests/fixtures/seed.json` instead. **Never commit real names, employers,
+    schedules, e-mail or phone numbers** (the GitHub repo is public).
+  - Deadline + "Add to to-dos" steps are linked `Task`s (`Task.source`). `state/appLinks.ts` subscribes both stores;
+    `reconcileTasks`/`syncStepsFromTasks` return the same array when unchanged (that is what stops loops). Linked
+    to-dos' title/due date are overwritten from the application; only `done` goes both ways.
+  - The profile store does NOT normalize on each keystroke (partial dates would be wiped mid-typing); main normalizes on save.
+    `DateField`/`TagsField` keep a draft and commit only valid values.
+  - Drag-out uses `webContents.startDrag` from main (hard link into `%TEMP%\Ponder-drag\<id>\<name>`); Chrome's `DownloadURL`
+    does not work in Electron. **Not covered by automated tests** (native drag): try it by hand after packaging.
+  - PDF/image preview: `<iframe>`/`<img>` on `attachment://stored/<name>`; the CSP in `index.html` allows `frame-src attachment:`.
+  - No linter exists in this project (checks are `npm test`, `npm run typecheck`, `npm run e2e`).
 
 - Electron 45 does not download its binary on `npm install`; run `node node_modules/electron/install.js`
   (or just `npm run dev`, which downloads it on first use).

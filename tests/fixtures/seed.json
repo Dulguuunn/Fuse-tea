@@ -1,0 +1,387 @@
+{
+  "format": "ponder-profile",
+  "version": 1,
+  "exportedAt": "2026-11-02T00:00:00.000Z",
+  "profile": {
+    "version": 1,
+    "seeded": true,
+    "personal": {
+      "fullName": {
+        "mn": "Тест Хүн",
+        "en": "Test Person"
+      }
+    },
+    "education": [
+      {
+        "id": "fx-edu-1",
+        "institution": {
+          "mn": "",
+          "en": "Example University"
+        },
+        "program": {
+          "mn": "",
+          "en": "Software Engineering"
+        },
+        "startDate": "2024",
+        "endDate": "present"
+      },
+      {
+        "id": "fx-edu-2",
+        "institution": {
+          "mn": "",
+          "en": "Example School No. 1"
+        },
+        "endDate": "2024"
+      }
+    ],
+    "experience": [
+      {
+        "id": "fx-exp-1",
+        "organization": {
+          "mn": "",
+          "en": "Example Charity"
+        },
+        "role": {
+          "mn": "",
+          "en": "Club leader"
+        },
+        "employmentType": "volunteer",
+        "startDate": "2019",
+        "endDate": "2024",
+        "description": {
+          "mn": "Клубыг тэргүүлсэн.",
+          "en": "Led the club."
+        }
+      },
+      {
+        "id": "fx-exp-2",
+        "organization": {
+          "mn": "",
+          "en": "Example Shop"
+        },
+        "role": {
+          "mn": "",
+          "en": "Packer"
+        },
+        "employmentType": "part-time",
+        "startDate": "2021",
+        "endDate": "2026"
+      },
+      {
+        "id": "fx-exp-3",
+        "organization": {
+          "mn": "",
+          "en": "Example Hotel"
+        },
+        "role": {
+          "mn": "",
+          "en": "Tour guide"
+        },
+        "employmentType": "part-time",
+        "startDate": "2025",
+        "endDate": "2025"
+      },
+      {
+        "id": "fx-exp-4",
+        "organization": {
+          "mn": "",
+          "en": "Example Software Co"
+        },
+        "role": {
+          "mn": "",
+          "en": "Junior Front-end Developer"
+        },
+        "employmentType": "full-time",
+        "startDate": "2026-06",
+        "endDate": "present",
+        "description": {
+          "mn": "Вэб системийн frontend хэсгийг хөгжүүлж байна.",
+          "en": ""
+        }
+      }
+    ],
+    "volunteer": [
+      {
+        "id": "fx-vol-1",
+        "activity": {
+          "mn": "",
+          "en": "Sample volunteering 1"
+        },
+        "organization": {
+          "mn": "",
+          "en": "Sample organization 1"
+        },
+        "startDate": "2023",
+        "endDate": "2023"
+      },
+      {
+        "id": "fx-vol-2",
+        "activity": {
+          "mn": "",
+          "en": "Sample volunteering 2"
+        },
+        "organization": {
+          "mn": "",
+          "en": "Sample organization 2"
+        },
+        "startDate": "2023",
+        "endDate": "2023"
+      },
+      {
+        "id": "fx-vol-3",
+        "activity": {
+          "mn": "",
+          "en": "Sample volunteering 3"
+        },
+        "organization": {
+          "mn": "",
+          "en": "Sample organization 3"
+        },
+        "startDate": "2023",
+        "endDate": "2023"
+      },
+      {
+        "id": "fx-vol-4",
+        "activity": {
+          "mn": "",
+          "en": "Sample volunteering 4"
+        },
+        "organization": {
+          "mn": "",
+          "en": "Sample organization 4"
+        },
+        "startDate": "2023",
+        "endDate": "2023"
+      },
+      {
+        "id": "fx-vol-5",
+        "activity": {
+          "mn": "",
+          "en": "Sample volunteering 5"
+        },
+        "organization": {
+          "mn": "",
+          "en": "Sample organization 5"
+        },
+        "startDate": "2023",
+        "endDate": "2023",
+        "hours": 20
+      }
+    ],
+    "awards": [
+      {
+        "id": "fx-award-1",
+        "title": {
+          "mn": "",
+          "en": "Sample award 1"
+        },
+        "issuer": {
+          "mn": "",
+          "en": "Sample issuer"
+        },
+        "date": "2023-12-01"
+      },
+      {
+        "id": "fx-award-2",
+        "title": {
+          "mn": "",
+          "en": "Sample award 2"
+        },
+        "issuer": {
+          "mn": "",
+          "en": "Sample issuer"
+        },
+        "date": "2023-12-02"
+      },
+      {
+        "id": "fx-award-3",
+        "title": {
+          "mn": "",
+          "en": "Sample award 3"
+        },
+        "issuer": {
+          "mn": "",
+          "en": "Sample issuer"
+        },
+        "date": "2023-12-03"
+      },
+      {
+        "id": "fx-award-4",
+        "title": {
+          "mn": "",
+          "en": "Sample award 4"
+        },
+        "issuer": {
+          "mn": "",
+          "en": "Sample issuer"
+        },
+        "date": "2023-12-04"
+      },
+      {
+        "id": "fx-award-5",
+        "title": {
+          "mn": "",
+          "en": "Sample award 5"
+        },
+        "issuer": {
+          "mn": "",
+          "en": "Sample issuer"
+        },
+        "date": "2023-12-05"
+      },
+      {
+        "id": "fx-award-6",
+        "title": {
+          "mn": "",
+          "en": "Sample award 6"
+        },
+        "issuer": {
+          "mn": "",
+          "en": "Sample issuer"
+        },
+        "date": "2023-12-06"
+      }
+    ],
+    "projects": [
+      {
+        "id": "fx-proj-1",
+        "name": {
+          "mn": "",
+          "en": "Sample web system"
+        },
+        "status": "in-progress"
+      },
+      {
+        "id": "fx-proj-2",
+        "name": {
+          "mn": "",
+          "en": "Sample notes app"
+        },
+        "techStack": [
+          "Electron",
+          "React"
+        ],
+        "status": "in-progress"
+      }
+    ],
+    "answerBank": [
+      {
+        "id": "fx-answer-1",
+        "question": "Why should you get this scholarship?",
+        "answer": "I am a software engineering student. I led a school club for five years, grew it a lot, and I am now building a web system that makes club management easier. This scholarship would help me deepen my skills.",
+        "language": "en",
+        "characterLimit": 400,
+        "tags": [
+          "why me",
+          "scholarship"
+        ]
+      }
+    ]
+  },
+  "applications": [
+    {
+      "id": "fx-app-1",
+      "name": "Example Bank scholarship",
+      "organization": "Example Bank",
+      "type": "scholarship",
+      "status": "in-progress",
+      "steps": [
+        {
+          "id": "fx-app-1-step-1",
+          "title": "Fill form",
+          "done": true
+        },
+        {
+          "id": "fx-app-1-step-2",
+          "title": "Write essay",
+          "done": true
+        },
+        {
+          "id": "fx-app-1-step-3",
+          "title": "Upload proof",
+          "done": false
+        },
+        {
+          "id": "fx-app-1-step-4",
+          "title": "Submit",
+          "done": false
+        }
+      ],
+      "answers": [
+        {
+          "id": "fx-app-1-a1",
+          "question": "Why should you get this scholarship?",
+          "answer": "I am a software engineering student. I led a school club for five years, grew it a lot, and I am now building a web system that makes club management easier. This scholarship would help me deepen my skills.",
+          "answerId": "fx-answer-1"
+        }
+      ],
+      "createdAt": 1793577600000,
+      "updatedAt": 1793577600000
+    },
+    {
+      "id": "fx-app-2",
+      "name": "Second scholarship (add the name)",
+      "type": "scholarship",
+      "status": "in-progress",
+      "steps": [
+        {
+          "id": "fx-app-2-step-1",
+          "title": "Fill form",
+          "done": false
+        },
+        {
+          "id": "fx-app-2-step-2",
+          "title": "Volunteer section",
+          "done": true
+        },
+        {
+          "id": "fx-app-2-step-3",
+          "title": "Upload proof (volunteer.pdf)",
+          "done": false
+        },
+        {
+          "id": "fx-app-2-step-4",
+          "title": "Submit",
+          "done": false
+        }
+      ],
+      "createdAt": 1793577600000,
+      "updatedAt": 1793577600000
+    }
+  ],
+  "files": {
+    "folders": [
+      {
+        "id": "seed-folder-proof",
+        "name": "Proof",
+        "parentId": null
+      },
+      {
+        "id": "seed-folder-proof-volunteer",
+        "name": "Volunteer",
+        "parentId": "seed-folder-proof"
+      },
+      {
+        "id": "seed-folder-proof-awards",
+        "name": "Awards",
+        "parentId": "seed-folder-proof"
+      },
+      {
+        "id": "seed-folder-diplomas",
+        "name": "Diplomas",
+        "parentId": null
+      },
+      {
+        "id": "seed-folder-cv",
+        "name": "CV",
+        "parentId": null
+      },
+      {
+        "id": "seed-folder-id",
+        "name": "ID",
+        "parentId": null
+      }
+    ],
+    "files": []
+  }
+}

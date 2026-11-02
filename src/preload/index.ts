@@ -32,6 +32,29 @@ const api: NotesApi = {
     get: () => invoke(IPC.settingsGet),
     save: (settings) => invoke(IPC.settingsSave, settings)
   },
+  profile: {
+    get: () => invoke(IPC.profileGet),
+    save: (profile) => invoke(IPC.profileSave, profile)
+  },
+  applications: {
+    get: () => invoke(IPC.applicationsGet),
+    save: (list) => invoke(IPC.applicationsSave, list)
+  },
+  files: {
+    get: () => invoke(IPC.filesGet),
+    save: (index) => invoke(IPC.filesSave, index),
+    add: (stored, bytes) => invoke(IPC.filesAdd, stored, bytes),
+    remove: (stored) => invoke(IPC.filesRemove, stored),
+    saveAs: (stored, name) => invoke(IPC.filesSaveAs, stored, name),
+    reveal: (stored) => invoke(IPC.filesReveal, stored),
+    path: (stored) => invoke(IPC.filesPath, stored),
+    startDrag: (stored, name) => void invoke(IPC.filesStartDrag, stored, name).catch(() => {})
+  },
+  transfer: {
+    exportJson: (json) => invoke(IPC.transferExportJson, json),
+    exportAll: (json, stored) => invoke(IPC.transferExportAll, json, stored),
+    importJson: () => invoke(IPC.transferImport)
+  },
   attachments: {
     saveImage: (bytes, ext) => invoke(IPC.attachmentsSaveImage, bytes, ext)
   },
@@ -39,6 +62,7 @@ const api: NotesApi = {
     dataDir: () => invoke(IPC.dataDir),
     version: () => invoke(IPC.version),
     openDataFolder: () => invoke(IPC.openDataFolder),
+    copyText: (text) => invoke(IPC.copyText, text),
     onBeforeClose: (cb) => {
       ipcRenderer.on(IPC.beforeClose, () => {
         void cb()

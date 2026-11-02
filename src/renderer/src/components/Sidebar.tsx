@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import {
+  Briefcase,
   CalendarDays,
   ListChecks,
   NotebookPen,
@@ -13,7 +14,8 @@ import { useUi, type Page } from '../state/uiStore'
 const NAV: Array<{ page: Page; label: string; icon: ReactNode }> = [
   { page: 'notes', label: 'Notes', icon: <NotebookPen size={18} /> },
   { page: 'todos', label: 'To-dos', icon: <ListChecks size={18} /> },
-  { page: 'calendar', label: 'Calendar', icon: <CalendarDays size={18} /> }
+  { page: 'calendar', label: 'Calendar', icon: <CalendarDays size={18} /> },
+  { page: 'applications', label: 'Applications', icon: <Briefcase size={18} /> }
 ]
 
 /** Shrinks the sidebar to an icon strip, or expands it again (button and Ctrl+\). */

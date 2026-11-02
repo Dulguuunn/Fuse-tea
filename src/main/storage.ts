@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto'
+import { existsSync } from 'node:fs'
 import { mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { normalizeNote } from '@shared/normalize'
@@ -41,6 +42,10 @@ export class Storage {
   async readJson<T>(rel: string, normalize: (raw: unknown) => T): Promise<T> {
     const parsed = await this.parseFile(join(this.dir, rel))
     return normalize(parsed.ok ? parsed.value : undefined)
+  }
+
+  exists(rel: string): boolean {
+    return existsSync(join(this.dir, rel))
   }
 
   writeJson(rel: string, data: unknown): Promise<void> {

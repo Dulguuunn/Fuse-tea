@@ -30,6 +30,8 @@ export interface Task {
   dueTime: number | null
   createdAt: number
   completedAt: number | null
+  /** Set when this to-do is kept in step with an application's deadline (stepId null) or one of its steps. */
+  source?: { applicationId: string; stepId: string | null }
 }
 
 export interface ClassSession {

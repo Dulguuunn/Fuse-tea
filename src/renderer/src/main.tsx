@@ -7,7 +7,11 @@ import './styles/base.css'
 import './styles/sidebar.css'
 import App from './App'
 import { LockScreen } from './components/LockScreen'
+import { startAppLinks } from './state/appLinks'
+import { useApplications } from './state/applicationsStore'
 import { useCalendar } from './state/calendarStore'
+import { useFiles } from './state/filesStore'
+import { useProfile } from './state/profileStore'
 import { saver } from './state/saver'
 import { useNotes } from './state/notesStore'
 import { useSettings } from './state/settingsStore'
@@ -22,7 +26,10 @@ async function loadAll(): Promise<void> {
     ['settings', () => useSettings.getState().load()],
     ['notes', () => useNotes.getState().load()],
     ['tasks', () => useTasks.getState().load()],
-    ['calendar', () => useCalendar.getState().load()]
+    ['calendar', () => useCalendar.getState().load()],
+    ['profile', () => useProfile.getState().load()],
+    ['applications', () => useApplications.getState().load()],
+    ['files', () => useFiles.getState().load()]
   ]
   await Promise.all(
     loaders.map(([name, load]) => load().catch((e: unknown) => console.error(`Could not load ${name}`, e)))
@@ -30,13 +37,14 @@ async function loadAll(): Promise<void> {
 }
 
 function renderApp(root: ReturnType<typeof createRoot>): void {
-  void loadAll().then(() =>
+  void loadAll().then(() => {
+    startAppLinks()
     root.render(
       <StrictMode>
         <App />
       </StrictMode>
     )
-  )
+  })
 }
 
 async function start(): Promise<void> {

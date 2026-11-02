@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export type Page = 'notes' | 'todos' | 'calendar' | 'settings'
+export type Page = 'notes' | 'todos' | 'calendar' | 'applications' | 'settings'
 
 export interface ToastData {
   id: number

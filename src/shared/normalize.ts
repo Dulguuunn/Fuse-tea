@@ -1,5 +1,6 @@
 // Turn whatever was read from disk (possibly hand-edited or from an older version) into valid
 // data. These never throw: bad entries are dropped, missing fields get defaults.
+import { bool, id, isColor, isDate, isMinute, isObj, list, num, str } from './guards'
 import { newId } from './id'
 import {
   DEFAULT_COLOR,
@@ -15,19 +16,6 @@ import {
   type Task
 } from './types'
 
-type Obj = Record<string, unknown>
-
-const isObj = (v: unknown): v is Obj => typeof v === 'object' && v !== null && !Array.isArray(v)
-const str = (v: unknown, fallback = ''): string => (typeof v === 'string' ? v : fallback)
-const num = (v: unknown, fallback: number): number =>
-  typeof v === 'number' && Number.isFinite(v) ? v : fallback
-const bool = (v: unknown): boolean => v === true
-const id = (v: unknown): string | null => (typeof v === 'string' && v.length > 0 ? v : null)
-const isDate = (v: unknown): v is string => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)
-const isMinute = (v: unknown, max = 1440): v is number =>
-  typeof v === 'number' && Number.isInteger(v) && v >= 0 && v <= max
-const isColor = (v: unknown): v is string => typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v)
-const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : [])
 
 export function normalizeSettings(raw: unknown): Settings {
   const r = isObj(raw) ? raw : {}
@@ -48,6 +36,9 @@ export function normalizeSettings(raw: unknown): Settings {
 export function normalizeTasks(raw: unknown): Task[] {
   return list(raw).flatMap((t): Task[] => {
     if (!isObj(t)) return []
+    const applicationId = isObj(t.source) ? id(t.source.applicationId) : null
+    const source =
+      applicationId && isObj(t.source) ? { applicationId, stepId: id(t.source.stepId) } : undefined
     return [
       {
         id: id(t.id) ?? newId(),
@@ -56,7 +47,8 @@ export function normalizeTasks(raw: unknown): Task[] {
         dueDate: isDate(t.dueDate) ? t.dueDate : null,
         dueTime: isMinute(t.dueTime, 1439) ? t.dueTime : null,
         createdAt: num(t.createdAt, Date.now()),
-        completedAt: typeof t.completedAt === 'number' ? t.completedAt : null
+        completedAt: typeof t.completedAt === 'number' ? t.completedAt : null,
+        ...(source ? { source } : {})
       }
     ]
   })

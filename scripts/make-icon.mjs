@@ -1,4 +1,4 @@
-// Builds the app icon from build/icon-source.jpg: crops a square (centered on the cloud) and writes
+// Builds the app icon from build/icon-source.jpg: crops a square (centered on the cloud), rounds the corners, writes
 // build/icon.png (256 px) and build/icon.ico (16–256 px, PNG-compressed).
 // Run: npx electron scripts/make-icon.mjs   (uses Electron's image decoder, no extra packages)
 import { app, nativeImage } from 'electron'
@@ -6,6 +6,7 @@ import { mkdirSync, writeFileSync } from 'node:fs'
 
 const SIZES = [16, 24, 32, 48, 64, 128, 256]
 const CENTER_X = 0.6 // horizontal center of the crop, as a fraction of the photo width
+const CORNER_RADIUS = 0.22 // corner radius as a fraction of the icon size (0.5 = circle)
 
 function squareCrop(img) {
   const { width, height } = img.getSize()
@@ -13,6 +14,26 @@ function squareCrop(img) {
   const x = Math.round(Math.min(Math.max(width * CENTER_X - side / 2, 0), width - side))
   const y = Math.round((height - side) / 2)
   return img.crop({ x, y, width: side, height: side })
+}
+
+// Cuts the corners off: makes everything outside a rounded square transparent (anti-aliased edge).
+function roundCorners(img, size) {
+  const buf = Buffer.from(img.toBitmap()) // BGRA, premultiplied alpha
+  const r = size * CORNER_RADIUS
+  const half = size / 2
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      // signed distance from the rounded square's edge (negative = inside)
+      const dx = Math.abs(x + 0.5 - half) - (half - r)
+      const dy = Math.abs(y + 0.5 - half) - (half - r)
+      const dist = Math.hypot(Math.max(dx, 0), Math.max(dy, 0)) + Math.min(Math.max(dx, dy), 0) - r
+      const coverage = Math.min(Math.max(0.5 - dist, 0), 1)
+      if (coverage >= 1) continue
+      const i = (y * size + x) * 4
+      for (let c = 0; c < 4; c++) buf[i + c] = Math.round(buf[i + c] * coverage)
+    }
+  }
+  return nativeImage.createFromBitmap(buf, { width: size, height: size })
 }
 
 function ico(pngs) {
@@ -40,7 +61,7 @@ app.whenReady().then(() => {
   const square = squareCrop(source)
   const pngs = SIZES.map((size) => ({
     size,
-    data: square.resize({ width: size, height: size, quality: 'best' }).toPNG()
+    data: roundCorners(square.resize({ width: size, height: size, quality: 'best' }), size).toPNG()
   }))
   mkdirSync('build', { recursive: true })
   writeFileSync('build/icon.png', pngs.find((p) => p.size === 256).data)

@@ -7,6 +7,7 @@ import {
   normalizeSettings,
   normalizeTasks
 } from '@shared/normalize'
+import { registerApplicationsIpc } from './applicationsIpc'
 import { attachmentUrl, saveAttachment } from './attachments'
 import type { Lock } from './lock'
 import type { Storage } from './storage'
@@ -59,6 +60,8 @@ export function registerIpc(storage: Storage, lock: Lock): void {
     if (!(bytes instanceof Uint8Array) || typeof ext !== 'string') throw new Error('Invalid image')
     return attachmentUrl(await saveAttachment(storage.dir, bytes, ext))
   })
+
+  registerApplicationsIpc(handle, storage)
 
   handle(IPC.dataDir, () => storage.dir)
   ipcMain.handle(IPC.version, () => app.getVersion())

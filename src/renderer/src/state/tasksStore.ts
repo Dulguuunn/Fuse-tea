@@ -10,6 +10,8 @@ interface TasksState {
   tasks: Task[]
   loaded: boolean
   load(): Promise<void>
+  /** Replaces the whole list (used by the link with applications). */
+  replaceAll(tasks: Task[]): void
   add(title: string, dueDate?: string | null, dueTime?: number | null): void
   update(id: string, patch: TaskPatch): void
   toggle(id: string): void
@@ -33,6 +35,7 @@ export const useTasks = create<TasksState>((set, get) => {
     async load() {
       set({ tasks: await window.api.tasks.list(), loaded: true })
     },
+    replaceAll: (tasks) => commit(tasks),
     add(title, dueDate = null, dueTime = null) {
       const trimmed = title.trim()
       if (!trimmed) return

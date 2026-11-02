@@ -108,13 +108,53 @@ The left sidebar switches between **Notes**, **To-dos**, **Calendar** and **Sett
   every repeat (the day stays). Repeating events are plain; one-off events stay striped.
 - Classes repeat every week. When the semester ends, open a class and choose **Delete class**.
 
+### Applications: scholarships, jobs and your "about me"
+
+The **Applications** page has three tabs.
+
+- **Applications:** one record per scholarship, job, internship or program. Set the **status**
+  (Draft, In progress, Submitted, Interview, Accepted, Rejected, Withdrawn) and filter or sort the list by
+  status or deadline. Each one has **steps** to tick off (a new application starts with a template you can
+  edit), the **questions and answers** it asked, **attached files**, and notes.
+  - The **deadline** shows on the Calendar (in the strip under each day) and in To-dos as
+    "Deadline: name". It is ticked off for you once the status reaches Submitted.
+  - The list-with-a-plus button on a step (**Add to to-dos**) keeps a to-do for that step. Checking the
+    step or the to-do checks the other. The to-do's title and due date follow the application, so change
+    them there. Deleting the to-do un-links the step; deleting the application removes its to-dos.
+  - **Insert from answer bank** reuses an answer; **Save to answer bank** keeps a new one for next time.
+- **Profile:** write your details once: personal info, education, experience, volunteering, awards,
+  skills, languages, projects and the **answer bank**. Names and descriptions have a Mongolian and an
+  English box. Every long text shows a live **character and word count**, and turns red when it passes
+  the limit you set. Every field and answer has a **Copy** button for pasting into online forms.
+  Dates can be partial: `2019`, `2026-06`, `2026-06-12`, or `present` for an end date. Each entry has an
+  **Include in CV** switch, a long description (for applications) and a short summary (for the CV).
+  **Export and import** is at the bottom (see below).
+- **Files:** folders (one level of nesting) and your proof documents. Add files with **Upload** or by
+  dragging them from your computer into the window (they go into the folder you have open). Click a file
+  to preview an image or PDF, rename it, move it, tag it, **Download** it, **Show in folder**, or
+  **Copy file path**. **Drag a file out** of the list onto your Desktop or into a folder to copy it
+  there. **Link** ties a file to the volunteering entries, awards or applications it proves; you can
+  also attach files from inside an entry or an application. Deleting a file also removes those links.
+  Deleting a folder keeps its files (they move up one level). Files up to 100 MB each; the only other
+  limit is free disk space.
+
+The first time Ponder opens with no profile, it creates an empty one plus the folders Proof / Volunteer,
+Proof / Awards, Diplomas, CV and ID. To start with your own details instead, put an export file named
+**`seed.json`** in the `data` folder (next to the app) before the first run (make it with *Export JSON*). The data folder is never
+uploaded to GitHub, so your details stay on this PC. Seeding happens once; deleting things never brings it back.
+
+**Export and import:** *Export JSON* saves one file with your profile, applications and file list.
+*Export with files* makes a folder with that JSON plus a copy of every file. *Import* replaces the
+three with an export (your current data is copied to `dataackupsefore-import-…` first). The JSON also
+contains your profile in the **JSON Resume** format, ready for CV templates later.
+
 ### Settings
 
 - **Theme:** System (follows Windows), Light, or Dark. Dark is pure black with white accents.
 - **Time format:** 24-hour or 12-hour.
 - **Week starts on:** Monday or Sunday.
 - **Hours shown on the calendar:** 07:00–22:00 by default. A class or event outside these hours still
-  shows, because the grid stretches to fit it (a late-night routine makes the grid start at 00:00).
+  shows, because the grid stretches to fit it (a late-night event makes the grid start at 00:00).
 - **Lock code:** Ponder asks for it every time it opens. It starts as `8848`. **Change code** and
   **Turn off** both ask for the current code, and 5 wrong tries make you wait 30 seconds. The code
   keeps other people out of the app; it does **not** encrypt the files in `C:\Note\data`.
@@ -132,6 +172,9 @@ data\
   notebooks.json      your notebooks
   tasks.json          your to-dos
   calendar.json       your classes and events
+  profile.json        your "about me" profile
+  applications.json   your applications
+  files.json          folders and file details (the files themselves are in files\)
   settings.json       your settings
   attachments\        images pasted into notes
   backups\2026-10-29\ automatic daily copies (the newest 7 are kept)
@@ -286,7 +329,7 @@ C:\Note\
 │     └─ src\features\  notes\, todos\, calendar\, settings\
 ├─ tests\unit\   automated tests for the logic (npm test)
 ├─ tests\e2e\    automated click-through tests of the real app (npm run e2e)
-├─ scripts\      icon builder, routine setup, shortcut script, screenshot and demo-data helpers
+├─ scripts\      icon builder, shortcut script, screenshot and demo-data helpers
 ├─ build\        app icon
 └─ docs\superpowers\  the design spec and the step-by-step build plan
 ```

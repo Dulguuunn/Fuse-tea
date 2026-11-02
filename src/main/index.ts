@@ -4,7 +4,7 @@ import { app, BrowserWindow, ipcMain, Menu, nativeTheme, net, protocol, shell } 
 import { IPC } from '@shared/ipc'
 import { normalizeSettings } from '@shared/normalize'
 import { todayISO } from '@shared/time'
-import { ATTACHMENT_SCHEME, resolveAttachmentPath } from './attachments'
+import { ATTACHMENT_SCHEME, resolveAttachmentPath, resolveStoredPath } from './attachments'
 import { runDailyBackup } from './backup'
 import { resolveDataDir } from './dataDir'
 import { registerIpc } from './ipc'
@@ -100,7 +100,7 @@ protocol.registerSchemesAsPrivileged([
 
 function serveAttachments(): void {
   protocol.handle(ATTACHMENT_SCHEME, (request) => {
-    const file = resolveAttachmentPath(dataDir, request.url)
+    const file = resolveAttachmentPath(dataDir, request.url) ?? resolveStoredPath(dataDir, request.url)
     if (!file) return new Response('Not found', { status: 404 })
     return net.fetch(pathToFileURL(file).toString())
   })

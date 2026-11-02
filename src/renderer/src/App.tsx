@@ -5,6 +5,7 @@ import { NotesPage } from './features/notes/NotesPage'
 import { NotesSidebar } from './features/notes/NotesSidebar'
 import { TodosPage } from './features/todos/TodosPage'
 import { CalendarPage } from './features/calendar/CalendarPage'
+import { ApplicationsPage } from './features/applications/ApplicationsPage'
 import { SettingsPage } from './features/settings/SettingsPage'
 import { useNotes } from './state/notesStore'
 import { useSettings } from './state/settingsStore'
@@ -45,6 +46,7 @@ export default function App(): React.JSX.Element {
         {page === 'notes' && <NotesPage />}
         {page === 'todos' && <TodosPage />}
         {page === 'calendar' && <CalendarPage />}
+        {page === 'applications' && <ApplicationsPage />}
         {page === 'settings' && <SettingsPage />}
       </main>
       <Toast />
